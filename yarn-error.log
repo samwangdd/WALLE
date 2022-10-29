@@ -1,0 +1,151 @@
+Arguments: 
+  /Users/samwang/.nvm/versions/node/v14.19.1/bin/node /Users/samwang/.nvm/versions/node/v14.19.1/bin/yarn
+
+PATH: 
+  /Users/samwang/.nvm/versions/node/v14.19.1/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/samwang/.nvm/versions/node/v14.19.1/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/samwang/Library/Android/sdk/tools:/Users/samwang/Library/Android/sdk/tools/bin:/Users/samwang/Library/Android/sdk/platform-tools:/Users/samwang/.rvm/bin:/Users/samwang/Library/Android/sdk/tools:/Users/samwang/Library/Android/sdk/tools/bin:/Users/samwang/Library/Android/sdk/platform-tools:/Users/samwang/.rvm/bin
+
+Yarn version: 
+  1.22.18
+
+Node version: 
+  14.19.1
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: https://registry.npmmirror.com/@medlinker%2fmed-request: [NOT_FOUND] @medlinker/med-request not found
+      at Request.params.callback [as _callback] (/Users/samwang/.nvm/versions/node/v14.19.1/lib/node_modules/yarn/lib/cli.js:66138:18)
+      at Request.self.callback (/Users/samwang/.nvm/versions/node/v14.19.1/lib/node_modules/yarn/lib/cli.js:140883:22)
+      at Request.emit (events.js:400:28)
+      at Request.<anonymous> (/Users/samwang/.nvm/versions/node/v14.19.1/lib/node_modules/yarn/lib/cli.js:141855:10)
+      at Request.emit (events.js:400:28)
+      at Gunzip.<anonymous> (/Users/samwang/.nvm/versions/node/v14.19.1/lib/node_modules/yarn/lib/cli.js:141777:12)
+      at Object.onceWrapper (events.js:519:28)
+      at Gunzip.emit (events.js:400:28)
+      at endReadableNT (internal/streams/readable.js:1334:12)
+      at processTicksAndRejections (internal/process/task_queues.js:82:21)
+
+npm manifest: 
+  {
+    "name": "api-typescript",
+    "version": "2.9.3",
+    "main": "./lib/index.js",
+    "module": "./es/index.js",
+    "bin": {
+      "apits": "./bin/apits"
+    },
+    "scripts": {
+      "build": "father build",
+      "publish:med": "npm run build && standard-version && git push --follow-tags origin master && npm publish --registry=http://nexus.medlinker.com/repository/local-npm/",
+      "test": "ts-node test/index.ts --type-check false",
+      "gen": "ts-node test/gen.ts --type-check false gen",
+      "init": "ts-node test/gen.ts --type-check false init",
+      "prepublish": "npm run build",
+      "publishOnly": "npm run build"
+    },
+    "files": [
+      "bin",
+      "lib",
+      "es"
+    ],
+    "dependencies": {
+      "@babel/runtime": "^7.13.10",
+      "change-case": "^3.0.2",
+      "consola": "^2.3.0",
+      "dayjs": "^1.8.32",
+      "download-git-repo": "^3.0.2",
+      "execa": "^5.1.1",
+      "form-data": "^3.0.0",
+      "fs-extra": "^7.0.1",
+      "get-port": "^5.1.1",
+      "got": "^11.5.1",
+      "json-schema": "^0.3.0",
+      "json-schema-to-typescript": "^10.0.2",
+      "json5": "^2.1.0",
+      "mockjs": "^1.0.1-beta3",
+      "ora": "5.4.1",
+      "prettier": "^2.2.1",
+      "prompts": "^2.0.4",
+      "rimraf": "^3.0.2",
+      "signal-exit": "^3.0.3",
+      "simple-git": "^2.41.1",
+      "swagger-client": "^3.12.0",
+      "to-json-schema": "^0.2.5",
+      "tough-cookie": "^4.0.0",
+      "tough-cookie-file-store": "^2.0.3",
+      "ts-node": "^8.0.2",
+      "typescript": "^4.2.3",
+      "vtils": "^4.33.0",
+      "yargs": "^16.2.0",
+      "yargs-parser": "^20.2.7"
+    },
+    "devDependencies": {
+      "@commitlint/cli": "^11.0.0",
+      "@commitlint/config-angular": "^11.0.0",
+      "@commitlint/config-conventional": "^11.0.0",
+      "@medlinker/med-request": "^1.2.4",
+      "@types/fs-extra": "^5.0.4",
+      "@types/json-schema": "^7.0.1",
+      "@types/json5": "^0.0.30",
+      "@types/mockjs": "^1.0.2",
+      "@types/node": "^10.12.10",
+      "@types/prompts": "^1.2.0",
+      "@types/react": "^16.9.2",
+      "@types/rimraf": "^3.0.2",
+      "@types/signal-exit": "^3.0.0",
+      "@types/swagger-schema-official": "^2.0.21",
+      "@types/to-json-schema": "^0.2.0",
+      "@types/tough-cookie-file-store": "^2.0.1",
+      "@types/yargs": "^16.0.1",
+      "babel-eslint": "^10.1.0",
+      "babel-plugin-component": "^1.1.1",
+      "chalk": "^4.1.1",
+      "codecov": "^3",
+      "debug": "^4.3.2",
+      "dumi": "^1.1.10",
+      "eslint": "^7.16.0",
+      "father": "^2.30.5",
+      "gh-pages": "^2.0.1",
+      "husky": "^4.3.6",
+      "jest": "^26",
+      "lint-staged": "^10.5.3",
+      "notify-dingtalk": "^1.2.0",
+      "openapi-types": "^7.0.1",
+      "semver": "^7.3.5",
+      "shx": "^0.3.2",
+      "standard-version": "^4.4.0",
+      "tempy": "^0.3.0",
+      "typedoc": "^0.14.2",
+      "typescript-snapshots-plugin": "^1.7.0"
+    },
+    "browserslist": [
+      "> 1%",
+      "last 2 versions",
+      "not dead"
+    ],
+    "husky": {
+      "hooks": {
+        "pre-commit": "lint-staged",
+        "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      }
+    },
+    "lint-staged": {
+      "src/*.{js,json,vue}": [
+        "eslint --fix"
+      ]
+    },
+    "publishConfig": {
+      "access": "public",
+      "registry": "http://nexus.medlinker.com/repository/local-npm/"
+    },
+    "repository": "medgit@git.medlinker.com:frontend-libs/qrcoder.git",
+    "author": "胡仲春 <huzhongchun@medlinker.com>",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
