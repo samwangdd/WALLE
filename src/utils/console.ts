@@ -16,7 +16,7 @@ export function log(message: ConsolaLogObject | any, ...args: any[]): void {
  * @param args
  */
 export function error(message: ConsolaLogObject | any, ...args: any[]): void {
-  consola.error(chalk.magenta(message), ...args);
+  consola.error(chalk.magenta(`❌ ${message}`), ...args);
 }
 
 /**
@@ -34,7 +34,7 @@ export function info(message: ConsolaLogObject | any, ...args: any[]): void {
  * @param args
  */
 export function warn(message: ConsolaLogObject | any, ...args: any[]): void {
-  consola.warn(chalk.blue(message), ...args);
+  consola.warn(chalk.blue(`🚨 ${message}`), ...args);
 }
 
 /**
@@ -52,7 +52,7 @@ export function tips(message: ConsolaLogObject | any, ...args: any[]): void {
  * @param args
  */
 export function success(message: ConsolaLogObject | any, ...args: any[]): void {
-  consola.success(chalk.cyan(message), ...args);
+  consola.success(chalk.cyan(`🎉 ${message}`), ...args);
 }
 
 /**
