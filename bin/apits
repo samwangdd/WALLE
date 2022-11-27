@@ -1,4 +1,5 @@
 #!/usr/bin/env node
 
 const CLI = require('../lib/cli').default;
-new CLI().run(process.argv.slice(2));
+const str = process.argv.slice(2);
+new CLI().run(str);
