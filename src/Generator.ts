@@ -16,7 +16,7 @@ import * as changeCase from 'change-case';
 import dayjs from 'dayjs';
 import fs from 'fs-extra';
 import path, { dirname } from 'path';
-import * as conso from './console';
+import * as log from './utils/console';
 import _ from 'lodash';
 import os from 'os';
 import {
@@ -56,7 +56,7 @@ import {
   formatContent,
   topNotesContent,
   filterHandler
-} from './utils';
+} from './utils/common';
 import { SwaggerToYApiServer } from './SwaggerToYApiServer';
 import GenRequest from './genRequest';
 import GenIndex from './genIndex';
@@ -112,12 +112,11 @@ function defaultRequestFunctionTemplate(props: RequestFunctionTemplateProps, con
   } else {
     finalBaseUrl = `"${baseURL}"`;
   }
-  return `export const ${requestFunctionName} = (data${hasData ? '' : '?'}: ${requestDataTypeName}${
-    requestFunctionExtraParams ? `,extra?:Record<string,any>` : ''
-  }) => {
+  return `export const ${requestFunctionName} = (data${hasData ? '' : '?'}: ${requestDataTypeName}${requestFunctionExtraParams ? `,extra?:Record<string,any>` : ''
+    }) => {
     return request.${method}<${requestDataTypeName},${responseDataTypeName}>(${handlePathParam(
-    extendedInterfaceInfo.path
-  )}, {
+      extendedInterfaceInfo.path
+    )}, {
       ${getDataKeySetStr(method)},
       ${baseURL ? `baseURL: ${finalBaseUrl},` : ''}
       ${requestFunctionExtraParams ? `...extra` : ''}
@@ -183,7 +182,7 @@ export class Generator {
   async generate(): Promise<OutputFileList> {
     const outputFileList: OutputFileList = Object.create(null);
 
-    const { projects, serverUrl, serverType, preproccessInterface, outputFilePath, filter } = this.config;
+    const { projects, serverUrl, serverType, preprocessInterface, outputFilePath, filter } = this.config;
     const projectArray = castArray(projects);
 
     const projectArrayRender = projectArray.map(async (project, projectIndex) => {
@@ -234,8 +233,8 @@ export class Generator {
               // 实现 _project 字段
               // interfaceInfo._project = omit(projectInfo, ['cats', 'getMockUrl', 'getDevUrl', 'getProdUrl']);
               // 预处理
-              const _interfaceInfo = isFunction(preproccessInterface)
-                ? preproccessInterface(cloneDeepFast(interfaceInfo), changeCase)
+              const _interfaceInfo = isFunction(preprocessInterface)
+                ? preprocessInterface(cloneDeepFast(interfaceInfo), changeCase)
                 : interfaceInfo;
 
               return _interfaceInfo;
@@ -431,14 +430,13 @@ export class Generator {
 
     const requestDataType = await jsonSchemaToType(requestDataJsonSchema, requestDataTypeName);
     const responseDataJsonSchema = getResponseDataJsonSchema(extendedInterfaceInfo, syntheticalConfig.dataKey);
-    // console.log(JSON.stringify(responseDataJsonSchema));
     const responseDataType = await jsonSchemaToType(responseDataJsonSchema, responseDataTypeName);
     const isRequestDataOptional = /(\{\}|any)$/s.test(requestDataType);
     const requestHookName =
       syntheticalConfig.reactHooks && syntheticalConfig.reactHooks.enabled
         ? isFunction(syntheticalConfig.reactHooks.getRequestHookName)
           ? /* istanbul ignore next */
-            await syntheticalConfig.reactHooks.getRequestHookName(extendedInterfaceInfo, changeCase)
+          await syntheticalConfig.reactHooks.getRequestHookName(extendedInterfaceInfo, changeCase)
           : `use${changeCase.pascalCase(requestFunctionName)}`
         : '';
 
@@ -467,10 +465,10 @@ export class Generator {
         // Swagger 时总是禁用标签、更新时间、链接
         ...(syntheticalConfig.serverType === 'swagger'
           ? {
-              tag: false,
-              updateTime: false,
-              link: false
-            }
+            tag: false,
+            updateTime: false,
+            link: false
+          }
           : {})
       } as CommentConfig;
       if (!isEnabled) {
@@ -484,32 +482,32 @@ export class Generator {
       const summary: Array<
         | false
         | {
-            label: string;
-            value: string | string[];
-          }
-      > = [
-        hasCategory && {
-          label: '分类',
-          value: hasLink
-            ? `[${extendedInterfaceInfo._category.name}↗](${syntheticalConfig.serverUrl}/project/${extendedInterfaceInfo.project_id}/interface/api/cat_${extendedInterfaceInfo.catid})`
-            : extendedInterfaceInfo._category.name
-        },
-        hasTag && {
-          label: '标签',
-          value: extendedInterfaceInfo.tag.map(tag => `\`${tag}\``)
-        },
-        hasRequestHeader && {
-          label: '请求头',
-          value: `\`${extendedInterfaceInfo.method.toUpperCase()} ${extendedInterfaceInfo.path}\``
-        },
-        hasUpdateTime && {
-          label: '更新时间',
-          value: process.env.JEST_WORKER_ID // 测试时使用 unix 时间戳
-            ? String(extendedInterfaceInfo.up_time)
-            : /* istanbul ignore next */
-              `\`${dayjs(extendedInterfaceInfo.up_time * 1000).format('YYYY-MM-DD HH:mm:ss')}\``
+          label: string;
+          value: string | string[];
         }
-      ];
+      > = [
+          hasCategory && {
+            label: '分类',
+            value: hasLink
+              ? `[${extendedInterfaceInfo._category.name}↗](${syntheticalConfig.serverUrl}/project/${extendedInterfaceInfo.project_id}/interface/api/cat_${extendedInterfaceInfo.catid})`
+              : extendedInterfaceInfo._category.name
+          },
+          hasTag && {
+            label: '标签',
+            value: extendedInterfaceInfo.tag.map(tag => `\`${tag}\``)
+          },
+          hasRequestHeader && {
+            label: '请求头',
+            value: `\`${extendedInterfaceInfo.method.toUpperCase()} ${extendedInterfaceInfo.path}\``
+          },
+          hasUpdateTime && {
+            label: '更新时间',
+            value: process.env.JEST_WORKER_ID // 测试时使用 unix 时间戳
+              ? String(extendedInterfaceInfo.up_time)
+              : /* istanbul ignore next */
+              `\`${dayjs(extendedInterfaceInfo.up_time * 1000).format('YYYY-MM-DD HH:mm:ss')}\``
+          }
+        ];
       const titleComment = hasTitle
         ? dedent`
             * ${genTitle(description)}
@@ -539,10 +537,10 @@ export class Generator {
         typeof baseURL === 'string'
           ? baseURL
           : typeof baseURL === 'function'
-          ? baseURL(extendedInterfaceInfo.path)
-          : '';
+            ? baseURL(extendedInterfaceInfo.path)
+            : '';
     } catch (e) {
-      conso.error(e);
+      log.error(e);
     }
 
     const code = dedent`
@@ -552,21 +550,20 @@ export class Generator {
       ${genComment(title => `接口 ${title} 的 **返回类型**`)}
       ${responseDataType.trim()}
 
-      ${
-        syntheticalConfig.typesOnly
-          ? ''
-          : dedent`
+      ${syntheticalConfig.typesOnly
+        ? ''
+        : dedent`
             ${genComment(title => `接口 ${title} 的 **请求函数**`)}
             ${requestFunctionTemplate(
-              {
-                baseURL: baseUrl,
-                requestFunctionName,
-                requestDataTypeName,
-                responseDataTypeName,
-                extendedInterfaceInfo
-              },
-              syntheticalConfig
-            )}
+          {
+            baseURL: baseUrl,
+            requestFunctionName,
+            requestDataTypeName,
+            responseDataTypeName,
+            extendedInterfaceInfo
+          },
+          syntheticalConfig
+        )}
 
           `
       }

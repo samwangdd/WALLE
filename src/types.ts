@@ -538,7 +538,7 @@ export interface SharedConfig {
    * }
    * ```
    */
-  preproccessInterface?(interfaceInfo: Interface, changeCase: ChangeCase): Interface | false;
+  preprocessInterface?(interfaceInfo: Interface, changeCase: ChangeCase): Interface | false;
 
   /**
    * 获取请求函数的名称。

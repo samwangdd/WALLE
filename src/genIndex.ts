@@ -8,9 +8,9 @@ import path from 'path';
 import { dedent } from 'vtils';
 import { Config } from './types';
 import { getOutputFilePath } from './getOutputPath';
-import { formatContent, topNotesContent } from './utils';
+import { formatContent, topNotesContent } from './utils/common';
 import { jsonSchemeFileHeader } from './responseDataJsonSchemaHandler';
-import * as conso from './console';
+import * as log from './utils/console';
 
 /** 提前准备好index文件 */
 export async function prepareIndexFile(config: Config) {
@@ -89,7 +89,7 @@ export const getIndexGitInfo = (config: Config): GetIndexGitInfoResult => {
       result[k] = matchRes[1] || '';
     });
   } catch (e) {
-    conso.tips(`未找到${indexFilePath}，将重新生成`);
+    log.tips(`未找到${indexFilePath}，将重新生成`);
   }
   return result;
 };

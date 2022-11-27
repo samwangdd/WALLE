@@ -8,7 +8,7 @@ import { login, loginPrompts } from './requestYapiData';
 import SimpleGit from 'simple-git';
 import { gitRepoCheckTmpPath } from './constants';
 import fs from 'fs-extra';
-import * as conso from './console';
+import * as log from './utils/console';
 
 /**
  * 定义配置。
@@ -276,7 +276,7 @@ export const prepareGitRepoLogin = async (configs: Config[]) => {
         return async () => {
           await fs.emptyDir(gitRepoCheckTmpPath);
           await gitInstance.clone(i.gitRepoSettings?.repository || '').catch(e => {
-            conso.error(`${i.gitRepoSettings?.repository}: 请确保项目存在并拥护权限`);
+            log.error(`${i.gitRepoSettings?.repository}: 请确保项目存在并拥护权限`);
             process.exit();
           });
         };

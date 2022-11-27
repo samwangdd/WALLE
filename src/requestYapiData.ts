@@ -19,7 +19,7 @@ import {
   yapiApiToken,
   yapiApiCatInterfaceList
 } from './constants';
-import * as conso from './console';
+import * as log from './utils/console';
 import { spinnerInstance } from './spinner';
 import { autoAsyncSplitQueue } from './helpers';
 
@@ -102,7 +102,7 @@ export const login = async function (data: LoginProps, config?: SyntheticalConfi
   const { serverUrl = DefaultServerUrl } = config || {};
   const url = `${serverUrl}${yapiApiLogin}`;
   const res = await client<ResponseData<LoginResponseData>>(url, { method: 'post', json: data }).catch(errmsg => {
-    conso.error(errmsg || '登录失败');
+    log.error(errmsg || '登录失败');
     process.exit();
   });
 
@@ -112,7 +112,7 @@ export const login = async function (data: LoginProps, config?: SyntheticalConfi
 
   const { body } = res;
   if (body && body.errcode) {
-    conso.error(body.errmsg || '登录失败');
+    log.error(body.errmsg || '登录失败');
     process.exit(0);
   }
   return body.data || body;
@@ -134,7 +134,7 @@ export const fetchApi = async function <T>(path: string, data: FetchApiData, con
   // 如果有token，则忽略cookie鉴权
   if (serverType === 'yapi' && !config?.token && !(await checkCookie(serverUrl))) {
     spinnerInstance.stop();
-    conso.log(data);
+    log.log(data);
     const info = await loginPrompts(serverUrl);
     spinnerInstance.start();
     await login(info);
@@ -163,9 +163,9 @@ export const fetchApi = async function <T>(path: string, data: FetchApiData, con
   if (res && res.errcode) {
     spinnerInstance.stop();
     if (res.errcode === ResponseErrorCode.UnLogin) {
-      conso.error('登录已过期或token异常', url, data);
+      log.error('登录已过期或token异常', url, data);
     } else {
-      conso.error(res.errmsg, url, data);
+      log.error(res.errmsg, url, data);
     }
 
     if (errorExit) process.exit();

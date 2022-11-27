@@ -18,8 +18,8 @@ import { Generator as GitRepoGenerator } from './GitRepoGenerator';
 import yargsParser from 'yargs-parser';
 import { packageCheck } from './dependenciesHandler';
 import chalk from 'chalk';
-import * as csl from './console';
-import { formatContent } from './utils';
+import * as log from './utils/console';
+import { formatContent } from './utils/common';
 import { prepareIndexFile } from './genIndex';
 import { spinnerInstance } from './spinner';
 import { asyncFnArrayOrderRun, prepareYapiLogin } from './helpers';
@@ -72,7 +72,7 @@ export async function getConfig() {
 export async function genConfig() {
   const { configTSFile, configTSFileExist } = await getConfig();
   if (configTSFileExist) {
-    csl.tips(`检测到配置文件: ${configTSFile}`);
+    log.tips(`检测到配置文件: ${configTSFile}`);
     const answers = await prompt({
       message: '是否覆盖已有配置文件?',
       name: 'override',
@@ -168,14 +168,14 @@ export async function genConfig() {
       })
     `)
   );
-  csl.success('写入配置文件完毕');
+  log.success('写入配置文件完毕');
 }
 
 async function dodo(config: Config, cwd: string, index = 0) {
   const { defaultRequestLib = true, topImportPkgTemplate, outputFilePath } = config;
   if (defaultRequestLib === false && typeof topImportPkgTemplate !== 'function') {
     spinnerInstance.stop();
-    csl.error(
+    log.error(
       `已配置不使用默认请求库，请通过topImportPkgTemplate配置使用的依赖库 \n 示例：${chalk.cyan(
         "()=>`import request from '../request'`"
       )}`
@@ -195,10 +195,10 @@ async function dodo(config: Config, cwd: string, index = 0) {
       ? `${serverType}模式代码生成成功，文件路径：${outputFilePath}`
       : `未找到需要更新的接口`;
     spinnerInstance.clear();
-    csl.log(chalk.yellowBright(`\n${index + 1}.-------------------------------`));
-    csl.success(outTips);
+    log.log(chalk.yellowBright(`\n${index + 1}.-------------------------------`));
+    log.success(outTips);
     console.timeEnd(label);
-    csl.log(chalk.yellowBright('---------------------------------\n'));
+    log.log(chalk.yellowBright('---------------------------------\n'));
     // spinnerInstance.render();
   } else {
     const label = chalk.green(`${config.serverUrl}耗时`);
@@ -208,8 +208,8 @@ async function dodo(config: Config, cwd: string, index = 0) {
       const res = await yapiUrlParser(config);
       if (res.parseResultList?.length) {
         spinnerInstance.clear();
-        csl.info(`Url解析结果:`);
-        csl.table(res.parseResultList);
+        log.info(`Url解析结果:`);
+        log.table(res.parseResultList);
       }
       projects = res.projects;
     }
@@ -225,10 +225,10 @@ async function dodo(config: Config, cwd: string, index = 0) {
     const output = await generator.generate();
     await generator.write(output);
     spinnerInstance.clear();
-    csl.log(chalk.yellowBright(`\n${index + 1}.-------------------------`));
-    csl.success(`${serverType}模式代码生成成功，文件路径：${outputFilePath}`);
+    log.log(chalk.yellowBright(`\n${index + 1}.-------------------------`));
+    log.success(`${serverType}模式代码生成成功，文件路径：${outputFilePath}`);
     console.timeEnd(label);
-    csl.log(chalk.yellowBright('---------------------------\n'));
+    log.log(chalk.yellowBright('---------------------------\n'));
     // spinnerInstance.render();
     await generator.destroy();
   }
@@ -251,9 +251,9 @@ export async function start() {
   const { cwd, configFileExist, configFile, configTSFile } = await getConfig();
 
   if (!configFileExist) {
-    return csl.error(`未发现配置文件: ${configFile}`);
+    return log.error(`未发现配置文件: ${configFile}`);
   }
-  csl.tips(`发现配置文件: ${configFile}`);
+  log.tips(`发现配置文件: ${configFile}`);
   let generator: Generator | undefined;
   try {
     const config: Config[] = require(configFile).default;
@@ -274,7 +274,7 @@ export async function start() {
   } catch (err) {
     spinnerInstance.stop();
     if (generator) await generator?.destroy();
-    return csl.error(err);
+    return log.error(err);
   }
 
   console.timeEnd(timeLabel);

@@ -1,10 +1,9 @@
-import { DownloadGitRepoSettings, Config } from './types';
+import { DownloadGitRepoSettings } from './types';
 import fs from 'fs-extra';
 import { execSync } from 'child_process';
 import path from 'path';
-import { JSONSchema4, JSONSchema4TypeName } from 'json-schema';
-import * as conso from './console';
-import rm from 'rimraf';
+import { JSONSchema4 } from 'json-schema';
+import * as log from './utils/console';
 
 const defautlGitRepo = 'https://git.medlinker.com/foundations/api-swagger.git';
 
@@ -48,7 +47,7 @@ export function download(props: DownloadGitRepoSettings): Promise<{
       repository: url
     });
   } catch (e) {
-    conso.error(e);
+    log.error(e);
     return Promise.reject(e);
   }
 }
@@ -142,7 +141,6 @@ export async function start(props: DownloadGitRepoSettings): Promise<ParsedJsonF
     }
     return list;
   }, [] as string[]);
-  // console.log(target, renderPaths);
 
   return {
     jsonFileDir: target,

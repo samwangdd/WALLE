@@ -1,7 +1,7 @@
 import simpleGit, { LogResult, SimpleGit, DiffResult } from 'simple-git';
 import fs from 'fs-extra';
 import dayjs from 'dayjs';
-import * as conso from './console';
+import * as log from './utils/console';
 
 export interface GitRepoInfoProps {
   gitRepoPath?: string;

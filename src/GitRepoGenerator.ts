@@ -20,7 +20,7 @@ import os from 'os';
 import { start as downloadGitRepoStart, ParsedJsonFileInfo, getDownloadTargetPath } from './downloadGitRepo';
 import { swaggerJsonToYApiData } from './swaggerJsonToYApiData';
 import GitRepoInfo from './GitRepoInfo';
-import * as conso from './console';
+import * as log from './utils/console';
 import { dedent, isFunction, noop } from 'vtils';
 import rm from 'rimraf';
 import {
@@ -40,7 +40,7 @@ import {
   jsonSchemaToType,
   formatContent,
   topNotesContent
-} from './utils';
+} from './utils/common';
 
 import GenRequest from './genRequest';
 import { genGitRepoIndex, getIndexGitInfo } from './genIndex';
@@ -134,7 +134,7 @@ export class Generator {
     const { gitRepoSettings } = config;
     const { repository } = gitRepoSettings || {};
     if (!repository) {
-      conso.error(`gitRepoSettings参数未设置仓库链接repository`);
+      log.error(`gitRepoSettings参数未设置仓库链接repository`);
       return false;
     }
     return true;
@@ -190,8 +190,8 @@ export class Generator {
           };
         });
       if (changed > 0) {
-        conso.info(`发现${changed}处更新，变更文件如下表`);
-        conso.table(files);
+        log.info(`发现${changed}处更新，变更文件如下表`);
+        log.table(files);
       }
     }
     return fFiles;
@@ -264,7 +264,7 @@ export class Generator {
     await GenRequest(config);
 
     if (!this.gitRepoInfo) {
-      conso.error('未获取到git信息');
+      log.error('未获取到git信息');
       return Promise.reject(new Error('未获取到git信息'));
     }
     const notes = await this.gitRepoInfo.gitNotesContent();
@@ -412,7 +412,7 @@ export class Generator {
           ? baseURL(extendedInterfaceInfo.path)
           : '';
     } catch (e) {
-      conso.error(e);
+      log.error(e);
     }
     const code = dedent`
       ${genComment(title => `接口 ${title} 的 **请求类型**`)}

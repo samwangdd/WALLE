@@ -3,8 +3,8 @@ import fs from 'fs-extra';
 import { dedent } from 'vtils';
 import { Config } from './types';
 import { getOutputFilePath } from './getOutputPath';
-import { formatContent, topNotesContent } from './utils';
-import * as conso from './console';
+import { formatContent, topNotesContent } from './utils/common';
+import * as log from './utils/console';
 
 export default async (config: Config) => {
   const { prettierConfigPath, defaultRequestLib = true, outputFilePath } = config;
@@ -12,7 +12,7 @@ export default async (config: Config) => {
   const rawRequestFunctionFilePath = getOutputFilePath(config, 'request.ts');
   if (!config.typesOnly) {
     if (await fs.pathExists(rawRequestFunctionFilePath)) {
-      // conso.tips(`输出目录${outputFilePath}下检测到已有request.ts，如果需要重新生成，请删除该文件 \n`);
+      // log.tips(`输出目录${outputFilePath}下检测到已有request.ts，如果需要重新生成，请删除该文件 \n`);
       return;
     }
   }

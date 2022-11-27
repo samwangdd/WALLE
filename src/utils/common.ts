@@ -9,9 +9,8 @@ import toJsonSchema from 'to-json-schema';
 import { castArray, forOwn, isArray, isEmpty, isObject } from 'vtils';
 import { compile, Options } from 'json-schema-to-typescript';
 import { Defined } from 'vtils/types';
-import { FileData } from './helpers';
+import { FileData } from '../helpers';
 import prettier from 'prettier';
-import dayjs from 'dayjs';
 import {
   Interface,
   PropDefinition,
@@ -21,7 +20,7 @@ import {
   Required,
   ResponseBodyType,
   Config
-} from './types';
+} from '../types';
 import { JSONSchema4, JSONSchema4TypeName } from 'json-schema';
 
 /**
@@ -237,19 +236,19 @@ export function getPrettier(filePath?: string): prettier.Options {
   const config = (configPath && prettier.resolveConfig.sync(configPath)) || {};
   return config
     ? {
-        parser: 'babel-ts', // 默认使用babel-ts避免报错：No Parser and no filepath given,using 'babel' the parser....
-        ...config
-      }
+      parser: 'babel-ts', // 默认使用babel-ts避免报错：No Parser and no filepath given,using 'babel' the parser....
+      ...config
+    }
     : {
-        printWidth: 120,
-        tabWidth: 2,
-        singleQuote: true,
-        semi: true,
-        trailingComma: 'all',
-        bracketSpacing: false,
-        endOfLine: 'lf',
-        parser: 'babel-ts'
-      };
+      printWidth: 120,
+      tabWidth: 2,
+      singleQuote: true,
+      semi: true,
+      trailingComma: 'all',
+      bracketSpacing: false,
+      endOfLine: 'lf',
+      parser: 'babel-ts'
+    };
 }
 
 export function JSTTOptions(): Partial<Options> {
