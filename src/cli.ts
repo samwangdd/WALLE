@@ -14,11 +14,11 @@ import yargs from 'yargs';
 import { Config } from './types';
 import { dedent } from 'vtils';
 import { Generator } from './Generator';
-import { Generator as GitRepoGenertor } from './GitRepoGenerator';
+import { Generator as GitRepoGenerator } from './GitRepoGenerator';
 import yargsParser from 'yargs-parser';
 import { packageCheck } from './dependenciesHandler';
 import chalk from 'chalk';
-import * as conso from './console';
+import * as csl from './console';
 import { formatContent } from './utils';
 import { prepareIndexFile } from './genIndex';
 import { spinnerInstance } from './spinner';
@@ -72,7 +72,7 @@ export async function getConfig() {
 export async function genConfig() {
   const { configTSFile, configTSFileExist } = await getConfig();
   if (configTSFileExist) {
-    conso.tips(`检测到配置文件: ${configTSFile}`);
+    csl.tips(`检测到配置文件: ${configTSFile}`);
     const answers = await prompt({
       message: '是否覆盖已有配置文件?',
       name: 'override',
@@ -168,14 +168,14 @@ export async function genConfig() {
       })
     `)
   );
-  conso.success('写入配置文件完毕');
+  csl.success('写入配置文件完毕');
 }
 
 async function dodo(config: Config, cwd: string, index = 0) {
   const { defaultRequestLib = true, topImportPkgTemplate, outputFilePath } = config;
   if (defaultRequestLib === false && typeof topImportPkgTemplate !== 'function') {
     spinnerInstance.stop();
-    conso.error(
+    csl.error(
       `已配置不使用默认请求库，请通过topImportPkgTemplate配置使用的依赖库 \n 示例：${chalk.cyan(
         "()=>`import request from '../request'`"
       )}`
@@ -184,21 +184,21 @@ async function dodo(config: Config, cwd: string, index = 0) {
   }
 
   const { serverType, gitRepoSettings } = config;
-  if (serverType === 'git-repo' && GitRepoGenertor.configValidator(config)) {
+  if (serverType === 'git-repo' && GitRepoGenerator.configValidator(config)) {
     const label = chalk.green(`${gitRepoSettings?.repository}耗时`);
     console.time(label);
     spinnerInstance.start();
-    const gitRepoGenertorInstance = new GitRepoGenertor(config, { cwd });
+    const gitRepoGenertorInstance = new GitRepoGenerator(config, { cwd });
     const output = await gitRepoGenertorInstance.generate();
     await gitRepoGenertorInstance.write(output);
     const outTips = Object.keys(output).length
       ? `${serverType}模式代码生成成功，文件路径：${outputFilePath}`
       : `未找到需要更新的接口`;
     spinnerInstance.clear();
-    conso.log(chalk.yellowBright(`\n${index + 1}.-------------------------------`));
-    conso.success(outTips);
+    csl.log(chalk.yellowBright(`\n${index + 1}.-------------------------------`));
+    csl.success(outTips);
     console.timeEnd(label);
-    conso.log(chalk.yellowBright('---------------------------------\n'));
+    csl.log(chalk.yellowBright('---------------------------------\n'));
     // spinnerInstance.render();
   } else {
     const label = chalk.green(`${config.serverUrl}耗时`);
@@ -208,8 +208,8 @@ async function dodo(config: Config, cwd: string, index = 0) {
       const res = await yapiUrlParser(config);
       if (res.parseResultList?.length) {
         spinnerInstance.clear();
-        conso.info(`Url解析结果:`);
-        conso.table(res.parseResultList);
+        csl.info(`Url解析结果:`);
+        csl.table(res.parseResultList);
       }
       projects = res.projects;
     }
@@ -225,10 +225,10 @@ async function dodo(config: Config, cwd: string, index = 0) {
     const output = await generator.generate();
     await generator.write(output);
     spinnerInstance.clear();
-    conso.log(chalk.yellowBright(`\n${index + 1}.-------------------------`));
-    conso.success(`${serverType}模式代码生成成功，文件路径：${outputFilePath}`);
+    csl.log(chalk.yellowBright(`\n${index + 1}.-------------------------`));
+    csl.success(`${serverType}模式代码生成成功，文件路径：${outputFilePath}`);
     console.timeEnd(label);
-    conso.log(chalk.yellowBright('---------------------------\n'));
+    csl.log(chalk.yellowBright('---------------------------\n'));
     // spinnerInstance.render();
     await generator.destroy();
   }
@@ -251,9 +251,9 @@ export async function start() {
   const { cwd, configFileExist, configFile, configTSFile } = await getConfig();
 
   if (!configFileExist) {
-    return conso.error(`未发现配置文件: ${configFile}`);
+    return csl.error(`未发现配置文件: ${configFile}`);
   }
-  conso.tips(`发现配置文件: ${configFile}`);
+  csl.tips(`发现配置文件: ${configFile}`);
   let generator: Generator | undefined;
   try {
     const config: Config[] = require(configFile).default;
@@ -274,8 +274,7 @@ export async function start() {
   } catch (err) {
     spinnerInstance.stop();
     if (generator) await generator?.destroy();
-    /* istanbul ignore next */
-    return conso.error(err);
+    return csl.error(err);
   }
 
   console.timeEnd(timeLabel);

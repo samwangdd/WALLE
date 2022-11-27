@@ -52,10 +52,9 @@
     "yargs-parser": "^20.2.7"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-angular": "^11.0.0",
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-angular": "^17.3.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@medlinker/med-request": "^1.2.4",
     "@types/fs-extra": "^5.0.4",
     "@types/json-schema": "^7.0.1",
     "@types/json5": "^0.0.30",
@@ -111,6 +110,6 @@
     "registry": "http://nexus.medlinker.com/repository/local-npm/"
   },
   "repository": "medgit@git.medlinker.com:frontend-libs/qrcoder.git",
-  "author": "胡仲春 <huzhongchun@medlinker.com>",
+  "author": "samwangdd <wyysammore@gmail.com>",
   "license": "MIT"
 }
