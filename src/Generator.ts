@@ -15,7 +15,7 @@
 import * as changeCase from 'change-case';
 import dayjs from 'dayjs';
 import fs from 'fs-extra';
-import path, { dirname } from 'path';
+import path from 'path';
 import * as log from './utils/console';
 import _ from 'lodash';
 import os from 'os';
@@ -23,26 +23,17 @@ import {
   castArray,
   cloneDeepFast,
   dedent,
-  groupBy,
   isEmpty,
   isFunction,
-  last,
-  memoize,
   noop,
-  omit,
-  uniq,
-  values,
   pick
 } from 'vtils';
 import {
-  CategoryList,
   CommentConfig,
   Config,
   ExtendedInterface,
   Interface,
   InterfaceList,
-  Project,
-  ProjectConfig,
   ServerConfig,
   SyntheticalConfig,
   GeneratorOptions,
@@ -61,7 +52,7 @@ import { SwaggerToYApiServer } from './SwaggerToYApiServer';
 import GenRequest from './genRequest';
 import GenIndex from './genIndex';
 import { genJsonSchemeConstContent } from './responseDataJsonSchemaHandler';
-import { fetchInterfaceList, fetchProjectInfo, getProjectInfoAndInterfaces } from './requestYapiData';
+import { getProjectInfoAndInterfaces } from './requestYapiData';
 import { getOutputFilePath } from './getOutputPath';
 
 interface OutputFileList {
@@ -404,8 +395,8 @@ export class Generator {
   requestFunctionNameGen(extendedInterfaceInfo: ExtendedInterface): string {
     const path = extendedInterfaceInfo.parsedPath.dir;
     const method = extendedInterfaceInfo.method; // 可能存在同path，不同method的用法
-    const prefix = [method, ...path.split('/')].join('_');
-    return changeCase.camelCase(prefix + extendedInterfaceInfo.parsedPath.name);
+    const prefix = [method, ...path.split('/'), extendedInterfaceInfo.parsedPath.name].join('_');
+    return changeCase.camelCase(prefix);
   }
 
   /** 生成接口代码 */
