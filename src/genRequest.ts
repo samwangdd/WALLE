@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import fs from 'fs-extra';
 import { dedent } from 'vtils';
 import { Config } from './types';
 import { getOutputFilePath } from './getOutputPath';
 import { formatContent, topNotesContent } from './utils/common';
-import * as log from './utils/console';
 
 export default async (config: Config) => {
-  const { prettierConfigPath, defaultRequestLib = true, outputFilePath } = config;
+  const { prettierConfigPath, defaultRequestLib = true } = config;
   if (defaultRequestLib === false) return;
   const rawRequestFunctionFilePath = getOutputFilePath(config, 'request.ts');
   if (!config.typesOnly) {

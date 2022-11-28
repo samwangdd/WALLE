@@ -43,7 +43,7 @@ export function warn(message: ConsolaLogObject | any, ...args: any[]): void {
  * @param args
  */
 export function tips(message: ConsolaLogObject | any, ...args: any[]): void {
-  consola.log(chalk.yellow(`🔈 ${message}\n`), ...args);
+  consola.log(chalk.yellow(`🦄 ${message}\n`), ...args);
 }
 
 /**

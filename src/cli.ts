@@ -24,6 +24,7 @@ import { prepareIndexFile } from './genIndex';
 import { spinnerInstance } from './spinner';
 import { asyncFnArrayOrderRun, prepareYapiLogin } from './helpers';
 import { yapiUrlParser } from './yapiUrlAnalysis';
+import { intersection } from './utils/array';
 
 TSNode.register({
   // 不加载本地的 tsconfig.json
@@ -183,7 +184,7 @@ async function dodo(config: Config, cwd: string, index = 0) {
 
   const { serverType, gitRepoSettings } = config;
   if (serverType === 'git-repo' && GitRepoGenerator.configValidator(config)) {
-    const label = chalk.green(`${gitRepoSettings?.repository}耗时`);
+    const label = chalk.green(`${gitRepoSettings?.repository} 耗时`);
     console.time(label);
     spinnerInstance.start();
     const gitRepoGenertorInstance = new GitRepoGenerator(config, { cwd });
@@ -199,14 +200,14 @@ async function dodo(config: Config, cwd: string, index = 0) {
     log.log(chalk.yellowBright('---------------------------------\n'));
     // spinnerInstance.render();
   } else {
-    const label = chalk.green(`${config.serverUrl}耗时`);
+    const label = chalk.green(`${config.serverUrl} 耗时`);
     console.time(label);
     let projects = config.projects;
     if (serverType === 'yapi' && config.yapiUrlList?.length) {
       const res = await yapiUrlParser(config);
       if (res.parseResultList?.length) {
         spinnerInstance.clear();
-        log.info(`Url解析结果:`);
+        log.info(`Url 解析结果:`);
         log.table(res.parseResultList);
       }
       projects = res.projects;
@@ -243,7 +244,7 @@ async function dodo(config: Config, cwd: string, index = 0) {
   return true;
 }
 
-export async function start() {
+export async function execute() {
   const timeLabel = chalk.green('总耗时');
   console.time(timeLabel);
   const { cwd, configFileExist, configFile, configTSFile } = await getConfigFilePath();
@@ -283,17 +284,21 @@ export const COMMAND_LIST = ['init', 'gen'];
 export default class CLI {
   argvs: any;
 
-  run(args: any, callback?: yargs.ParseCallback) {
+  run(args: any) {
     this.argvs = yargsParser(args);
 
     const cli = this.init();
 
     if (args.length === 0) {
       cli.showHelp();
-    } else if (!COMMAND_LIST.includes(args)) {
-      log.error(`未知命令：${args}`);
-      cli.showHelp();
+    } else {
+      const inter = intersection(COMMAND_LIST)(args)
+      if (!inter.length) {
+        log.error(`未知命令：${args}，请确认参数是否正确！`);
+        cli.showHelp();
+      }
     }
+
     return cli.parse(args);
   }
 
@@ -302,21 +307,21 @@ export default class CLI {
       .scriptName('apits')
       .usage('Usage: $0 <command> [options]')
       .command<any>(
-        'gen',
-        '生成接口类型声明和方法',
-        y => { },
-        (argv: any) => {
-          const { } = argv;
-          start();
-        }
-      )
-      .command<any>(
         'init',
         '生成配置文件',
         y => { },
         (argv: any) => {
           const { } = argv;
           generateConfigFile();
+        }
+      )
+      .command<any>(
+        'gen',
+        '生成接口类型声明和方法',
+        y => { },
+        (argv: any) => {
+          const { } = argv;
+          execute();
         }
       )
       .help();
