@@ -13,16 +13,34 @@
     "preserveSymlinks": true,
     "skipLibCheck": true,
     "jsx": "preserve",
-    "lib": ["ESNext", "DOM"],
+    "rootDir": ".",
+    "outDir": "./",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "paths": {
-      "api-typescript": ["./src/index.ts"]
+      "api-typescript": [
+        "./src/index.ts"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
     },
     "plugins": [
       {
         "name": "typescript-snapshots-plugin",
-        "snapshotCallIdentifiers": ["toMatchSnapshot", "toThrowErrorMatchingSnapshot", "toMatchDiffSnapshot"]
+        "snapshotCallIdentifiers": [
+          "toMatchSnapshot",
+          "toThrowErrorMatchingSnapshot",
+          "toMatchDiffSnapshot"
+        ]
       }
     ]
   },
-  "exclude": ["src/api"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "lib"
+  ]
 }
