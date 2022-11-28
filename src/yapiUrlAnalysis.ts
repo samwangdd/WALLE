@@ -23,9 +23,9 @@ export const yapiUrlParser = async (config: Config): Promise<YapiUrlAnalysisResu
   > = {};
   const parseResultList: YapiUrlAnalysisResult['parseResultList'] = [];
 
-  // `http://yapi.int.medlinker.com/project/279/interface/api => 项目id：279`
-  // `http://yapi.int.medlinker.com/project/279/interface/api/cat_1061 =>项目id:279、分类id:1061`
-  // `http://yapi.int.medlinker.com/project/279/interface/api/19343 => 项目id:279、接口id: 19343`
+  // `http://yapi.corp.hongsong.club/project/279/interface/api => 项目id：279`
+  // `http://yapi.corp.hongsong.club/project/279/interface/api/cat_1061 =>项目id:279、分类id:1061`
+  // `http://yapi.corp.hongsong.club/project/279/interface/api/19343 => 项目id:279、接口id: 19343`
   if (urls.length) {
     const projectsConfigs = [...castArray(projects)];
     // 补全projecId

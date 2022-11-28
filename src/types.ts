@@ -768,9 +768,9 @@ export interface ServerConfig extends SharedConfig, GenTemplateType {
    *
    @example
    ```
-    `http://yapi.int.medlinker.com/project/279/interface/api => 项目id：279`
-    `http://yapi.int.medlinker.com/project/279/interface/api/cat_1061 =>项目id:279、分类id:1061`
-    `http://yapi.int.medlinker.com/project/279/interface/api/19343 => 项目id:279、接口id: 19343`
+    `http://yapi.corp.hongsong.club/project/279/interface/api => 项目id：279`
+    `http://yapi.corp.hongsong.club/project/279/interface/api/cat_1061 =>项目id:279、分类id:1061`
+    `http://yapi.corp.hongsong.club/project/279/interface/api/19343 => 项目id:279、接口id: 19343`
    ```
    */
   yapiUrlList?: string | string[];

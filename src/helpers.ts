@@ -20,7 +20,7 @@ export function defineConfig(config: Partial<Config> | Partial<Config>[]): Confi
   const final: Config[] = configs.map(item => {
     return {
       serverType: 'yapi',
-      serverUrl: 'http://yapi.int.medlinker.com',
+      serverUrl: 'http://yapi.corp.hongsong.club',
       typesOnly: false,
       target: 'typescript',
       prodEnvName: 'local',

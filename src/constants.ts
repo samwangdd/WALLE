@@ -1,4 +1,4 @@
-export const DefaultServerUrl = 'http://yapi.int.medlinker.com';
+export const DefaultServerUrl = 'http://yapi.corp.hongsong.club';
 
 export const CookieStoreFile = '/Users/Shared/api-typescript/apitsYapiCookie.json';
 

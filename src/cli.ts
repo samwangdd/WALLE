@@ -105,7 +105,7 @@ export async function generateConfigFile() {
         message: '接口信息服务地址',
         name: 'url',
         type: 'text',
-        initial: 'http://yapi.int.medlinker.com/'
+        initial: 'http://yapi.corp.hongsong.club/'
       }
     ]);
   }
