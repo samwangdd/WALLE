@@ -45,7 +45,7 @@ import {
 import GenRequest from './genRequest';
 import { genGitRepoIndex, getIndexGitInfo } from './genIndex';
 import { genJsonSchemeConstContent } from './responseDataJsonSchemaHandler';
-import { getOutputFilePath } from './getOutputPath';
+import { genOutputFilePath } from './getOutputPath';
 import { resolve } from 'dns';
 
 interface OutputFileListType {
@@ -209,7 +209,7 @@ export class Generator {
     await Promise.all(
       filesList.map(async item => {
         const { jsonFilePath, name, outPath } = item;
-        const writePath = getOutputFilePath(this.config, outPath);
+        const writePath = genOutputFilePath(this.config, outPath);
         const interfaces = await this.readJson(jsonFilePath);
         const filtedInterfaces = interfaces.filter(item => {
           if (interfaceFilter instanceof RegExp) {

@@ -3,7 +3,7 @@
 import type { AppendOptions } from 'form-data';
 import type { Config, RequestConfig, RequestFunctionParams } from './types';
 import { checkCookie } from './cookie';
-import { spinnerInstance } from './spinner';
+import { spinner } from './UI/spinner';
 import { login, loginPrompts } from './requestYapiData';
 import SimpleGit from 'simple-git';
 import { gitRepoCheckTmpPath } from './constants';
@@ -251,9 +251,9 @@ export const prepareYapiLogin = async (configs: Config[]) => {
       needLoginYapis.map(item => {
         return async () => {
           if (!(await checkCookie(item.serverUrl))) {
-            spinnerInstance.clear();
+            spinner.clear();
             const info = await loginPrompts(item.serverUrl);
-            spinnerInstance.start();
+            spinner.start();
             await login(info, item);
           }
         };

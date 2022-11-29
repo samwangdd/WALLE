@@ -40,4 +40,4 @@ class Spin {
   }
 }
 
-export const spinnerInstance = new Spin();
+export const spinner = new Spin();

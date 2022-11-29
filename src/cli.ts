@@ -11,20 +11,20 @@ import fs from 'fs-extra';
 import path from 'path';
 import prompt from 'prompts';
 import yargs from 'yargs';
-import { Config } from './types';
 import { dedent } from 'vtils';
-import { Generator } from './Generator';
-import { Generator as GitRepoGenerator } from './GitRepoGenerator';
 import yargsParser from 'yargs-parser';
-import { packageCheck } from './dependenciesHandler';
 import chalk from 'chalk';
+import { Config } from './types';
+import { asyncFnArrayOrderRun, prepareYapiLogin } from './helpers';
+import { Generator } from './main/Generator';
+import { Generator as GitRepoGenerator } from './GitRepoGenerator';
+import { packageCheck } from './dependenciesHandler';
 import * as log from './utils/console';
 import { formatContent } from './utils/common';
-import { prepareIndexFile } from './genIndex';
-import { spinnerInstance } from './spinner';
-import { asyncFnArrayOrderRun, prepareYapiLogin } from './helpers';
-import { yapiUrlParser } from './yapiUrlAnalysis';
 import { intersection } from './utils/array';
+import { prepareIndexFile } from './genIndex';
+import { spinner } from './UI/spinner';
+import { yapiUrlParser } from './yapiUrlAnalysis';
 
 TSNode.register({
   // 不加载本地的 tsconfig.json
@@ -71,7 +71,7 @@ export async function getConfigFilePath() {
   };
 }
 
-export async function generateConfigFile() {
+export async function initConfigFile() {
   const { configTSFile, configTSFileExist } = await getConfigFilePath();
   if (configTSFileExist) {
     log.tips(`检测到配置文件: ${configTSFile}`);
@@ -170,10 +170,11 @@ export async function generateConfigFile() {
   log.success('写入配置文件完毕');
 }
 
-async function dodo(config: Config, cwd: string, index = 0) {
+async function callGenerator(config: Config, cwd: string, index = 0) {
   const { defaultRequestLib = true, topImportPkgTemplate, outputFilePath } = config;
+
   if (defaultRequestLib === false && typeof topImportPkgTemplate !== 'function') {
-    spinnerInstance.stop();
+    spinner.stop();
     log.error(
       `已配置不使用默认请求库，请通过topImportPkgTemplate配置使用的依赖库 \n 示例：${chalk.cyan(
         "()=>`import request from '../request'`"
@@ -186,19 +187,19 @@ async function dodo(config: Config, cwd: string, index = 0) {
   if (serverType === 'git-repo' && GitRepoGenerator.configValidator(config)) {
     const label = chalk.green(`${gitRepoSettings?.repository} 耗时`);
     console.time(label);
-    spinnerInstance.start();
+    spinner.start();
     const gitRepoGenertorInstance = new GitRepoGenerator(config, { cwd });
     const output = await gitRepoGenertorInstance.generate();
     await gitRepoGenertorInstance.write(output);
     const outTips = Object.keys(output).length
       ? `${serverType}模式代码生成成功，文件路径：${outputFilePath}`
       : `未找到需要更新的接口`;
-    spinnerInstance.clear();
+    spinner.clear();
     log.log(chalk.yellowBright(`\n${index + 1}.-------------------------------`));
     log.success(outTips);
     console.timeEnd(label);
     log.log(chalk.yellowBright('---------------------------------\n'));
-    // spinnerInstance.render();
+    // spinner.render();
   } else {
     const label = chalk.green(`${config.serverUrl} 耗时`);
     console.time(label);
@@ -206,13 +207,13 @@ async function dodo(config: Config, cwd: string, index = 0) {
     if (serverType === 'yapi' && config.yapiUrlList?.length) {
       const res = await yapiUrlParser(config);
       if (res.parseResultList?.length) {
-        spinnerInstance.clear();
+        spinner.clear();
         log.info(`Url 解析结果:`);
         log.table(res.parseResultList);
       }
       projects = res.projects;
     }
-    spinnerInstance.start();
+    spinner.start();
     const generator = new Generator(
       {
         ...config,
@@ -223,12 +224,12 @@ async function dodo(config: Config, cwd: string, index = 0) {
     await generator.prepare();
     const output = await generator.generate();
     await generator.write(output);
-    spinnerInstance.clear();
+    spinner.clear();
     log.log(chalk.yellowBright(`\n${index + 1}.-------------------------`));
     log.success(`${serverType}模式代码生成成功，文件路径：${outputFilePath}`);
     console.timeEnd(label);
     log.log(chalk.yellowBright('---------------------------\n'));
-    // spinnerInstance.render();
+    // spinner.render();
     await generator.destroy();
   }
 
@@ -260,18 +261,18 @@ export async function execute() {
     await prepareYapiLogin(config);
     // await prepareGitRepoLogin(config);
 
-    spinnerInstance.start('正在获取数据并生成代码... \n');
+    spinner.start('正在获取数据并生成代码... \n');
     await asyncFnArrayOrderRun(
       config.map((configItem, index) => {
         return async () => {
           await prepareIndexFile(configItem);
-          await dodo(configItem, cwd, index);
+          callGenerator(configItem, cwd, index);
         };
       })
     );
-    spinnerInstance.stop();
+    spinner.stop();
   } catch (err) {
-    spinnerInstance.stop();
+    spinner.stop();
     if (generator) await generator?.destroy();
     return log.error(err);
   }
@@ -312,7 +313,7 @@ export default class CLI {
         y => { },
         (argv: any) => {
           const { } = argv;
-          generateConfigFile();
+          initConfigFile();
         }
       )
       .command<any>(

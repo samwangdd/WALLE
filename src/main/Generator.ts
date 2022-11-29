@@ -16,7 +16,7 @@ import * as changeCase from 'change-case';
 import dayjs from 'dayjs';
 import fs from 'fs-extra';
 import path from 'path';
-import * as log from './utils/console';
+import * as log from '../utils/console';
 import _ from 'lodash';
 import os from 'os';
 import {
@@ -38,7 +38,7 @@ import {
   SyntheticalConfig,
   GeneratorOptions,
   RequestFunctionTemplateProps
-} from './types';
+} from '../types';
 import { exec } from 'child_process';
 import {
   getRequestDataJsonSchema,
@@ -47,13 +47,13 @@ import {
   formatContent,
   topNotesContent,
   filterHandler
-} from './utils/common';
-import { SwaggerToYApiServer } from './SwaggerToYApiServer';
-import GenRequest from './genRequest';
-import GenIndex from './genIndex';
-import { genJsonSchemeConstContent } from './responseDataJsonSchemaHandler';
-import { getProjectInfoAndInterfaces } from './requestYapiData';
-import { getOutputFilePath } from './getOutputPath';
+} from '../utils/common';
+import { SwaggerToYApiServer } from '../SwaggerToYApiServer';
+import GenRequest from '../genRequest';
+import GenIndex from '../genIndex';
+import { genJsonSchemeConstContent } from '../responseDataJsonSchemaHandler';
+import { getProjectInfoAndInterfaces } from '../requestYapiData';
+import { genOutputFilePath } from '../getOutputPath';
 
 interface OutputFileList {
   [outputFilePath: string]: {
@@ -274,7 +274,7 @@ export class Generator {
             })
           );
 
-          const catOutputFilePath = getOutputFilePath(this.config, `/${projectInfo?._id}/${catId}.ts`);
+          const catOutputFilePath = genOutputFilePath(this.config, `/${projectInfo?._id}/${catId}.ts`);
 
           if (categoryCode.length > 0) {
             outputFileList[catOutputFilePath] = {
@@ -282,7 +282,7 @@ export class Generator {
               categoryId: catId,
               syntheticalConfig: this.config,
               content: categoryCode,
-              outputResponseDataJsonSchemaFilePath: getOutputFilePath(
+              outputResponseDataJsonSchemaFilePath: genOutputFilePath(
                 this.config,
                 `/${projectInfo?._id}/${catId}responseDataJsonSchema.ts`
               ),

@@ -7,14 +7,14 @@ import fs from 'fs-extra';
 import path from 'path';
 import { dedent } from 'vtils';
 import { Config } from './types';
-import { getOutputFilePath } from './getOutputPath';
+import { genOutputFilePath } from './getOutputPath';
 import { formatContent, topNotesContent } from './utils/common';
 import { jsonSchemeFileHeader } from './responseDataJsonSchemaHandler';
 import * as log from './utils/console';
 
 /** 提前准备好index文件 */
 export async function prepareIndexFile(config: Config) {
-  const indexFilePath = getOutputFilePath(config, 'index.ts');
+  const indexFilePath = genOutputFilePath(config, 'index.ts');
   if (!(await fs.pathExists(indexFilePath))) {
     fs.outputFileSync(indexFilePath, dedent`${topNotesContent()}` + '\n');
   }
@@ -22,7 +22,7 @@ export async function prepareIndexFile(config: Config) {
 
 export default async (config: Config, categoryList: { categoryId: string; projectId: string }[]) => {
   const { prettierConfigPath } = config;
-  const indexFilePath = getOutputFilePath(config, 'index.ts');
+  const indexFilePath = genOutputFilePath(config, 'index.ts');
   let originFileContent = '';
 
   if (await fs.pathExists(indexFilePath)) {
@@ -60,7 +60,7 @@ export default async (config: Config, categoryList: { categoryId: string; projec
     ${jsonSchemeFileHeader()}
   `;
 
-    const schemaFilePath = getOutputFilePath(config, 'responseDataJsonSchema.ts');
+    const schemaFilePath = genOutputFilePath(config, 'responseDataJsonSchema.ts');
     fs.outputFile(schemaFilePath, formatContent(dedent`${schemaContent}`, prettierConfigPath));
   }
 };
@@ -78,7 +78,7 @@ export interface GetIndexGitInfoResult {
   commitId: string;
 }
 export const getIndexGitInfo = (config: Config): GetIndexGitInfoResult => {
-  const indexFilePath = getOutputFilePath(config, 'index.ts');
+  const indexFilePath = genOutputFilePath(config, 'index.ts');
   const result: GetIndexGitInfoResult = {} as GetIndexGitInfoResult;
 
   try {
@@ -95,7 +95,7 @@ export const getIndexGitInfo = (config: Config): GetIndexGitInfoResult => {
 };
 export const genGitRepoIndex = async (config: Config, filePathList: string[], notes?: string) => {
   const { prettierConfigPath } = config;
-  const indexFilePath = getOutputFilePath(config, 'index.ts');
+  const indexFilePath = genOutputFilePath(config, 'index.ts');
   let originFileContent = '';
 
   if (await fs.pathExists(indexFilePath)) {

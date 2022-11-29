@@ -20,7 +20,7 @@ import {
   yapiApiCatInterfaceList
 } from './constants';
 import * as log from './utils/console';
-import { spinnerInstance } from './spinner';
+import { spinner } from './UI/spinner';
 import { autoAsyncSplitQueue } from './helpers';
 
 type ResponseData<T = Record<string, any>> = {
@@ -133,10 +133,10 @@ export const fetchApi = async function <T>(path: string, data: FetchApiData, con
   const { serverUrl = DefaultServerUrl, serverType, errorExit = true } = config || {};
   // 如果有token，则忽略cookie鉴权
   if (serverType === 'yapi' && !config?.token && !(await checkCookie(serverUrl))) {
-    spinnerInstance.stop();
+    spinner.stop();
     log.log(data);
     const info = await loginPrompts(serverUrl);
-    spinnerInstance.start();
+    spinner.start();
     await login(info);
   }
   const method = config?.method || 'get';
@@ -161,7 +161,7 @@ export const fetchApi = async function <T>(path: string, data: FetchApiData, con
 
   const { body: res } = response;
   if (res && res.errcode) {
-    spinnerInstance.stop();
+    spinner.stop();
     if (res.errcode === ResponseErrorCode.UnLogin) {
       log.error('登录已过期或token异常', url, data);
     } else {

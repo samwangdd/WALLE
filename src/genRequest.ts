@@ -1,13 +1,13 @@
 import fs from 'fs-extra';
 import { dedent } from 'vtils';
 import { Config } from './types';
-import { getOutputFilePath } from './getOutputPath';
+import { genOutputFilePath } from './getOutputPath';
 import { formatContent, topNotesContent } from './utils/common';
 
 export default async (config: Config) => {
   const { prettierConfigPath, defaultRequestLib = true } = config;
   if (defaultRequestLib === false) return;
-  const rawRequestFunctionFilePath = getOutputFilePath(config, 'request.ts');
+  const rawRequestFunctionFilePath = genOutputFilePath(config, 'request.ts');
   if (!config.typesOnly) {
     if (await fs.pathExists(rawRequestFunctionFilePath)) {
       // log.tips(`输出目录${outputFilePath}下检测到已有request.ts，如果需要重新生成，请删除该文件 \n`);
