@@ -23,6 +23,10 @@ yarn && yarn link # link to global
 
 yarn link api-typescript # other project link to local
 ```
+[Development Doc](doc/development.md)
+
+## Commit Type
+> build, ci, docs, feat, fix, perf, refactor, revert, style, test
 
 ## TO-DO
 [ ] 自定义 request 文件
