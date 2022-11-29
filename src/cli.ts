@@ -1,11 +1,5 @@
-#!/usr/bin/env node
-/* eslint-disable no-inner-declarations */
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-empty-pattern */
-/* eslint-disable global-require */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import * as TSNode from 'ts-node';
 import fs from 'fs-extra';
 import path from 'path';
@@ -25,6 +19,8 @@ import { intersection } from './utils/array';
 import { prepareIndexFile } from './genIndex';
 import { spinner } from './UI/spinner';
 import { yapiUrlParser } from './yapiUrlAnalysis';
+import { YAPI_CONFIG_SNIPPET } from './constant/snippet';
+import { YAPI_PROMPT } from './constant/prompt';
 
 TSNode.register({
   // 不加载本地的 tsconfig.json
@@ -89,85 +85,21 @@ export async function initConfigFile() {
     type: 'select',
     choices: [
       { title: 'Yapi', value: 'yapi' },
-      { title: 'GitRepo', value: 'git-repo' },
-      { title: 'Swagger', value: 'swagger' }
     ]
   });
   let yapiAnswers;
   if (serverTypeAnswers.serverType === 'yapi') {
-    yapiAnswers = await prompt([
-      {
-        message: `yapi项目token`,
-        name: 'token',
-        type: 'text',
-        initial: ''
-      },
-      {
-        message: '接口信息服务地址',
-        name: 'url',
-        type: 'text',
-        initial: 'http://yapi.corp.hongsong.club/'
-      }
-    ]);
-  }
-  let swaggerAnswers;
-  if (serverTypeAnswers.serverType === 'swagger') {
-    swaggerAnswers = await prompt([
-      {
-        message: '接口信息服务地址',
-        name: 'url',
-        type: 'text',
-        initial: ''
-      }
-    ]);
-  }
-  let gitRepoAnswers;
-  if (serverTypeAnswers.serverType === 'git-repo') {
-    gitRepoAnswers = await prompt([
-      {
-        message: '仓库地址(SSH协议)',
-        name: 'repository',
-        type: 'text',
-        initial: 'https://git.medlinker.com/foundations/api-swagger.git'
-      },
-      {
-        message: '使用的分支名',
-        name: 'branch',
-        type: 'text',
-        initial: 'master'
-      }
-    ]);
+    yapiAnswers = await prompt(YAPI_PROMPT as any);
   }
 
-  await fs.outputFile(
+  const yapiSnippet = YAPI_CONFIG_SNIPPET(yapiAnswers?.token)
+  console.log('%c [ yapiAnswers ]-114', 'font-size:13px; background:#a48d70; color:#e8d1b4;', yapiAnswers)
+  fs.outputFile(
     configTSFile,
-    formatContent(dedent`
-      import { defineConfig } from 'api-typescript'
-
-      export default defineConfig({
-        serverType: '${serverTypeAnswers.serverType}',
-        ${serverTypeAnswers.serverType !== 'git-repo'
-        ? `serverUrl: '${yapiAnswers?.url || swaggerAnswers?.url || ''}',`
-        : ''
-      }
-        ${serverTypeAnswers.serverType === 'yapi'
-        ? `projects: {
-          token: '${yapiAnswers?.token}' // yapi项目的token
-        },`
-        : ''
-      }
-        ${serverTypeAnswers.serverType === 'git-repo'
-        ? `gitRepoSettings: {
-            repository: '${gitRepoAnswers?.repository || ''}',
-            branch: '${gitRepoAnswers?.branch || ''}'
-          },`
-        : ''
-      }
-        outputFilePath: 'src/api'
-      })
-    `)
-  );
-  log.success('写入配置文件完毕');
+    formatContent(dedent`${yapiSnippet}`)
+  ).then(() => {
+    log.success('写入配置文件完毕');
+  })
 }
 
 async function callGenerator(config: Config, cwd: string, index = 0) {
@@ -178,7 +110,8 @@ async function callGenerator(config: Config, cwd: string, index = 0) {
     log.error(
       `已配置不使用默认请求库，请通过topImportPkgTemplate配置使用的依赖库 \n 示例：${chalk.cyan(
         "()=>`import request from '../request'`"
-      )}`
+      )
+      } `
     );
     return false;
   }
@@ -192,10 +125,10 @@ async function callGenerator(config: Config, cwd: string, index = 0) {
     const output = await gitRepoGenertorInstance.generate();
     await gitRepoGenertorInstance.write(output);
     const outTips = Object.keys(output).length
-      ? `${serverType}模式代码生成成功，文件路径：${outputFilePath}`
+      ? `${serverType} 模式代码生成成功，文件路径：${outputFilePath} `
       : `未找到需要更新的接口`;
     spinner.clear();
-    log.log(chalk.yellowBright(`\n${index + 1}.-------------------------------`));
+    log.log(chalk.yellowBright(`\n${index + 1}.------------------------------- `));
     log.success(outTips);
     console.timeEnd(label);
     log.log(chalk.yellowBright('---------------------------------\n'));
@@ -208,7 +141,7 @@ async function callGenerator(config: Config, cwd: string, index = 0) {
       const res = await yapiUrlParser(config);
       if (res.parseResultList?.length) {
         spinner.clear();
-        log.info(`Url 解析结果:`);
+        log.info(`URL 解析结果: `);
         log.table(res.parseResultList);
       }
       projects = res.projects;
@@ -225,8 +158,8 @@ async function callGenerator(config: Config, cwd: string, index = 0) {
     const output = await generator.generate();
     await generator.write(output);
     spinner.clear();
-    log.log(chalk.yellowBright(`\n${index + 1}.-------------------------`));
-    log.success(`${serverType}模式代码生成成功，文件路径：${outputFilePath}`);
+    log.log(chalk.yellowBright(`\n${index + 1}.------------------------- `));
+    log.success(`${serverType} 模式代码生成成功，文件路径：${outputFilePath} `);
     console.timeEnd(label);
     log.log(chalk.yellowBright('---------------------------\n'));
     // spinner.render();
@@ -246,14 +179,14 @@ async function callGenerator(config: Config, cwd: string, index = 0) {
 }
 
 export async function execute() {
-  const timeLabel = chalk.green('总耗时');
-  console.time(timeLabel);
+  // const timeLabel = chalk.green('总耗时');
+  // console.time(timeLabel);
   const { cwd, configFileExist, configFile, configTSFile } = await getConfigFilePath();
 
   if (!configFileExist) {
-    return log.error(`Not Found: ${configFile}`);
+    return log.error(`Not Found: ${configFile} `);
   }
-  log.tips(`发现配置文件: ${configFile}`);
+  log.tips(`发现配置文件: ${configFile} `);
   let generator: Generator | undefined;
   try {
     const config: Config[] = require(configFile).default;
@@ -277,7 +210,7 @@ export async function execute() {
     return log.error(err);
   }
 
-  console.timeEnd(timeLabel);
+  // console.timeEnd(timeLabel);
   return null;
 }
 
