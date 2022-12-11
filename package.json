@@ -8,11 +8,10 @@
   },
   "scripts": {
     "build": "father build",
-    "publish:med": "npm run build && standard-version && git push --follow-tags origin master && npm publish --registry=http://nexus.medlinker.com/repository/local-npm/",
     "test": "ts-node test/index.ts --type-check false",
     "gen": "ts-node test/gen.ts --type-check false gen",
     "init": "ts-node test/gen.ts --type-check false init",
-    "prepublish": "npm run build",
+    "prepublish": "npm run build && standard-version && git push --follow-tags origin master && npm publish  --registry=https://registry.npmjs.org",
     "publishOnly": "npm run build"
   },
   "files": [
@@ -109,9 +108,9 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "http://nexus.medlinker.com/repository/local-npm/"
+    "registry": "https://registry.npmjs.org"
   },
-  "repository": "medgit@git.medlinker.com:frontend-libs/qrcoder.git",
+  "repository": "https://github.com/samwangdd/WALLE.git",
   "author": "samwangdd <wyysammore@gmail.com>",
   "license": "MIT"
 }

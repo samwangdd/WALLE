@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    // "allowJs": true,
+    // "allowSyntheticDefaultImports": true,
     "strict": true,
     "target": "ES5",
     "module": "CommonJS",
@@ -8,7 +9,6 @@
     "declaration": true,
     "removeComments": false,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "newLine": "LF",
     "preserveSymlinks": true,
     "skipLibCheck": true,
@@ -40,7 +40,6 @@
   },
   "exclude": [
     "node_modules",
-    "dist",
     "lib"
   ]
 }
