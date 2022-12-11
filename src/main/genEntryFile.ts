@@ -6,11 +6,11 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { dedent } from 'vtils';
-import { Config } from './types';
-import { genOutputFilePath } from './getOutputPath';
-import { formatContent, topNotesContent } from './utils/common';
+import { Config } from '../types';
+import { genOutputFilePath } from '../utils/getOutputPath';
+import { formatContent, topNotesContent } from '../utils/common';
 import { jsonSchemeFileHeader } from './responseDataJsonSchemaHandler';
-import * as log from './utils/console';
+import * as log from '../utils/console';
 
 /** 提前准备好index文件 */
 export async function prepareIndexFile(config: Config) {
@@ -29,7 +29,7 @@ export default async (config: Config, categoryList: { categoryId: string; projec
     originFileContent = fs.readFileSync(indexFilePath, { encoding: 'utf-8' });
   }
 
-  const exportAllInterface = categoryList.reduce((list, { categoryId, projectId }, index) => {
+  const exportAllInterface = categoryList.reduce((list, { categoryId, projectId }) => {
     // return `export * from  "./${projectId}/${categoryId}"`;
     if (originFileContent.indexOf(`${projectId}/${categoryId}`) === -1) {
       list.push(`export * from  "./${projectId}/${categoryId}"`);
@@ -93,7 +93,7 @@ export const getIndexGitInfo = (config: Config): GetIndexGitInfoResult => {
   }
   return result;
 };
-export const genGitRepoIndex = async (config: Config, filePathList: string[], notes?: string) => {
+export const genGitRepoIndex = async (config: Config, filePathList: string[]) => {
   const { prettierConfigPath } = config;
   const indexFilePath = genOutputFilePath(config, 'index.ts');
   let originFileContent = '';
@@ -105,7 +105,7 @@ export const genGitRepoIndex = async (config: Config, filePathList: string[], no
   // 清除顶部日志信息
   // originFileContent = originFileContent.replace(/\/\/(\s+)?<-Logs->(.|\n)+\/\/(\s+)?<-END->/, '');
 
-  const exportAllInterface = filePathList.reduce((list, filePath, index) => {
+  const exportAllInterface = filePathList.reduce((list, filePath) => {
     if (originFileContent.indexOf(filePath) === -1) {
       list.push(`export * from  "./${path.join('./', filePath)}"`);
     }

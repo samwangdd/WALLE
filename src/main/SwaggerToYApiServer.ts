@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import getAvailablePort from 'get-port';
 import got from 'got';
 import http from 'http';
@@ -22,6 +21,7 @@ export class SwaggerToYApiServer {
 
   private yapiData: AsyncReturnType<typeof swaggerJsonToYApiData> = {} as any;
 
+  // eslint-disable-next-line no-unused-vars
   constructor(private readonly options: SwaggerToYApiServerOptions) {}
 
   async getPort(): Promise<number> {

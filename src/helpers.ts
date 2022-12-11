@@ -2,11 +2,11 @@
 /* eslint-disable no-eval */
 import type { AppendOptions } from 'form-data';
 import type { Config, RequestConfig, RequestFunctionParams } from './types';
-import { checkCookie } from './cookie';
+import { checkCookie } from './utils/cookie';
 import { spinner } from './UI/spinner';
-import { login, loginPrompts } from './requestYapiData';
+import { login, loginPrompts } from './main/requestYapiData';
 import SimpleGit from 'simple-git';
-import { gitRepoCheckTmpPath } from './constants';
+import { gitRepoCheckTmpPath } from './constant/common';
 import fs from 'fs-extra';
 import * as log from './utils/console';
 
@@ -159,8 +159,8 @@ export function prepare(requestConfig: RequestConfig, requestData: any): Request
     const UniFormData: typeof FormData | undefined = useNativeFormData
       ? FormData
       : useNodeFormData
-      ? eval(`require('form-data')`)
-      : undefined;
+        ? eval(`require('form-data')`)
+        : undefined;
     if (!UniFormData) {
       throw new Error('当前环境不支持 FormData');
     }
@@ -275,7 +275,7 @@ export const prepareGitRepoLogin = async (configs: Config[]) => {
       gitrepoList.map(i => {
         return async () => {
           await fs.emptyDir(gitRepoCheckTmpPath);
-          await gitInstance.clone(i.gitRepoSettings?.repository || '').catch(e => {
+          await gitInstance.clone(i.gitRepoSettings?.repository || '').catch(() => {
             log.error(`${i.gitRepoSettings?.repository}: 请确保项目存在并拥护权限`);
             process.exit();
           });

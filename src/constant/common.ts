@@ -4,6 +4,7 @@ export const CookieStoreFile = '/Users/Shared/api-typescript/apitsYapiCookie.jso
 
 export enum ResponseErrorCode {
   /** 未登录 */
+  // eslint-disable-next-line no-unused-vars
   UnLogin = 40011
 }
 

@@ -1,6 +1,6 @@
 import { CookieJar } from 'tough-cookie';
 import { FileCookieStore } from 'tough-cookie-file-store';
-import { CookieStoreFile } from './constants';
+import { CookieStoreFile } from '../constant/common';
 import fs from 'fs-extra';
 
 fs.ensureFileSync(CookieStoreFile);

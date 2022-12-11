@@ -10,14 +10,14 @@ import yargsParser from 'yargs-parser';
 import chalk from 'chalk';
 import { Config } from './types';
 import { asyncFnArrayOrderRun, prepareYapiLogin } from './helpers';
-import { Generator } from './main/Generator';
-import { packageCheck } from './dependenciesHandler';
+import { Generator } from './main/generator';
+import { packageCheck } from './utils/dependenciesHandler';
 import * as log from './utils/console';
 import { formatContent } from './utils/common';
 import { intersection } from './utils/array';
-import { prepareIndexFile } from './genIndex';
+import { prepareIndexFile } from './main/genEntryFile';
 import { spinner } from './UI/spinner';
-import { yapiUrlParser } from './yapiUrlAnalysis';
+import { yapiUrlParser } from './main/yapiUrlAnalysis';
 import { YAPI_CONFIG_SNIPPET } from './constant/snippet';
 import { YAPI_PROMPT } from './constant/prompt';
 

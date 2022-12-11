@@ -1,11 +1,5 @@
-/* eslint-disable no-console */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-else-return */
-/* eslint-disable no-empty */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable func-names */
-import { JSONSchema4 } from './types';
-import { ExtendedInterface } from './types';
+import { JSONSchema4 } from '../types';
+import { ExtendedInterface } from '../types';
 import * as changeCase from 'change-case';
 
 export const jsonSchemeKey = function (path: string): string {

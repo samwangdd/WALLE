@@ -1,8 +1,12 @@
+/**
+ * genRequest
+ * create by samwangdd on 2022-12-11
+ */
 import fs from 'fs-extra';
 import { dedent } from 'vtils';
-import { Config } from './types';
-import { genOutputFilePath } from './getOutputPath';
-import { formatContent, topNotesContent } from './utils/common';
+import { Config } from '../types';
+import { genOutputFilePath } from '../utils/getOutputPath';
+import { formatContent, topNotesContent } from '../utils/common';
 
 export default async (config: Config) => {
   const { prettierConfigPath, defaultRequestLib = true } = config;

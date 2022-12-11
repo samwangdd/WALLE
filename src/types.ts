@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable camelcase */
-/* eslint-disable no-use-before-define */
 export * from 'json-schema';
 import { JSONSchema4 } from 'json-schema';
 import { LiteralUnion, OmitStrict } from 'vtils/types';
@@ -785,12 +782,12 @@ export interface ServerConfig extends SharedConfig, GenTemplateType {
 /** 混合的配置。 */
 export type SyntheticalConfig = Partial<
   ServerConfig &
-    ProjectConfig &
-    CategoryConfig & {
-      mockUrl: string;
-      devUrl: string;
-      prodUrl: string;
-    }
+  ProjectConfig &
+  CategoryConfig & {
+    mockUrl: string;
+    devUrl: string;
+    prodUrl: string;
+  }
 >;
 
 /** 配置。 */

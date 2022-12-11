@@ -1,13 +1,11 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
 /**
  * 获取yapi数据
  */
 import got, { Options } from 'got';
-import { CategoryList, Category, Project, SyntheticalConfig, Interface, BaseInterfaceInfo } from './types';
+import { CategoryList, Category, Project, SyntheticalConfig, Interface, BaseInterfaceInfo } from '../types';
 import prompts from 'prompts';
-import { isEmpty, omit, castArray } from 'vtils';
-import { cookieJar, checkCookie } from './cookie';
+import { isEmpty, omit } from 'vtils';
+import { cookieJar, checkCookie } from '../utils/cookie';
 import {
   DefaultServerUrl,
   ResponseErrorCode,
@@ -18,10 +16,10 @@ import {
   yapiApiInterfaceDetail,
   yapiApiToken,
   yapiApiCatInterfaceList
-} from './constants';
-import * as log from './utils/console';
-import { spinner } from './UI/spinner';
-import { autoAsyncSplitQueue } from './helpers';
+} from '../constant/common';
+import * as log from '../utils/console';
+import { spinner } from '../UI/spinner';
+import { autoAsyncSplitQueue } from '../helpers';
 
 type ResponseData<T = Record<string, any>> = {
   errcode: number;
@@ -43,10 +41,10 @@ const client = got.extend({
   }
 });
 
-const emailValidate: prompts.PrevCaller<'email', string | boolean> = (prev, values) => {
+const emailValidate: prompts.PrevCaller<'email', string | boolean> = (prev) => {
   return !prev ? '请输入邮箱' : true;
 };
-const passwordValidate: prompts.PrevCaller<'password', string | boolean> = (prev, values) => {
+const passwordValidate: prompts.PrevCaller<'password', string | boolean> = (prev) => {
   return !prev ? '请输入密码' : true;
 };
 
@@ -77,11 +75,13 @@ export const loginPrompts = async (serverUrl?: string) => {
   }
   const res = await prompts(formatInputs);
   return res as {
+    // eslint-disable-next-line no-unused-vars
     [k in NameValueKey]: string;
   };
 };
 
 export type LoginProps = {
+  // eslint-disable-next-line no-unused-vars
   [k in NameValueKey]: string;
 };
 export type LoginResponseData = {

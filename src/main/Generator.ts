@@ -1,23 +1,9 @@
-/* eslint-disable prefer-const */
-/* eslint-disable no-console */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-shadow */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-constant-condition */
-/* eslint-disable camelcase */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unused-vars */
 import * as changeCase from 'change-case';
 import dayjs from 'dayjs';
 import fs from 'fs-extra';
 import path from 'path';
 import * as log from '../utils/console';
-import _ from 'lodash';
 import os from 'os';
 import {
   castArray,
@@ -48,12 +34,12 @@ import {
   topNotesContent,
   filterHandler
 } from '../utils/common';
-import { SwaggerToYApiServer } from '../SwaggerToYApiServer';
-import GenRequest from '../genRequest';
-import GenIndex from '../genIndex';
-import { genJsonSchemeConstContent } from '../responseDataJsonSchemaHandler';
-import { getProjectInfoAndInterfaces } from '../requestYapiData';
-import { genOutputFilePath } from '../getOutputPath';
+import { getProjectInfoAndInterfaces } from './requestYapiData';
+import { SwaggerToYApiServer } from './SwaggerToYApiServer';
+import genRequest from './genRequest';
+import genEntryFile from './genEntryFile';
+import { genJsonSchemeConstContent } from './responseDataJsonSchemaHandler';
+import { genOutputFilePath } from '../utils/getOutputPath';
 
 interface OutputFileList {
   [outputFilePath: string]: {
@@ -319,13 +305,13 @@ export class Generator {
     const jsonSchemaEnabled = config.jsonSchema?.enabled;
 
     // 生成 request.ts
-    await GenRequest(config);
+    await genRequest(config);
     // 生成入口 index.ts
-    await GenIndex(config, CategoryList);
+    await genEntryFile(config, CategoryList);
 
     return Promise.all(
       Object.keys(outputFileList).map(async outputFilePath => {
-        let {
+        const {
           content,
           requestFunctionFilePath,
           requestHookMakerFilePath,
@@ -336,8 +322,8 @@ export class Generator {
 
         // 支持 .jsx? 后缀
         outputFilePath = outputFilePath.replace(/\.js(x)?$/, '.ts$1');
-        requestFunctionFilePath = requestFunctionFilePath.replace(/\.js(x)?$/, '.ts$1');
-        requestHookMakerFilePath = requestHookMakerFilePath.replace(/\.js(x)?$/, '.ts$1');
+        const _requestFunctionFilePath = requestFunctionFilePath.replace(/\.js(x)?$/, '.ts$1');
+        const _requestHookMakerFilePath = requestHookMakerFilePath.replace(/\.js(x)?$/, '.ts$1');
 
         const topImportPkgTemplate = syntheticalConfig.topImportPkgTemplate || defaultTopImportPkgTemplate;
 
@@ -365,8 +351,8 @@ export class Generator {
         if (syntheticalConfig.target === 'javascript') {
           await this.tsc(outputFilePath);
           await Promise.all([
-            fs.remove(requestFunctionFilePath).catch(noop),
-            fs.remove(requestHookMakerFilePath).catch(noop),
+            fs.remove(_requestFunctionFilePath).catch(noop),
+            fs.remove(_requestHookMakerFilePath).catch(noop),
             fs.remove(outputFilePath).catch(noop)
           ]);
         }

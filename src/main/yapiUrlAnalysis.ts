@@ -1,7 +1,7 @@
-import type { Config } from './types';
+import type { Config } from '../types';
 import { castArray } from 'vtils';
 import { fetchInterfaceById, fetchProject } from './requestYapiData';
-import { filterHandler } from './utils/common';
+import { filterHandler } from '../utils/common';
 
 export type YapiUrlAnalysisResult = Config & {
   parseResultList?: { projectId: number | null; catId: number | null; interfaceId: number | null }[];

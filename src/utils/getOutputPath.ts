@@ -1,9 +1,9 @@
 /**
- * 生成入口文件
+ * 获取入口文件路径
  */
 
 import path from 'path';
-import { Config } from './types';
+import { Config } from '../types';
 
 export const genOutputFilePath = (config: Config, file: string) => {
   const { dir, name } = path.parse(config.outputFilePath || '');
