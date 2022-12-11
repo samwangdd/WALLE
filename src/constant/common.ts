@@ -28,3 +28,5 @@ export const yapiApiToken = '/api/project/token';
 
 /** 用于检查是否拥护git权限 */
 export const gitRepoCheckTmpPath = '/tmp/gitRepoCheck';
+
+export const NPM_REGISTRY = 'https://registry.npmjs.org';
