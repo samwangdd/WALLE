@@ -11,7 +11,6 @@ import chalk from 'chalk';
 import { Config } from './types';
 import { asyncFnArrayOrderRun, prepareYapiLogin } from './helpers';
 import { Generator } from './main/Generator';
-import { Generator as GitRepoGenerator } from './GitRepoGenerator';
 import { packageCheck } from './dependenciesHandler';
 import * as log from './utils/console';
 import { formatContent } from './utils/common';
@@ -43,9 +42,6 @@ TSNode.register({
     lib: ['es2017']
   }
 });
-interface OptionsType {
-  configFile?: string;
-}
 
 // 获取配置文件的路径信息
 export async function getConfigFilePath() {
@@ -102,7 +98,7 @@ export async function initConfigFile() {
   })
 }
 
-async function callGenerator(config: Config, cwd: string, index = 0) {
+async function callGenerator(config: Config, cwd: string) {
   const { defaultRequestLib = true, topImportPkgTemplate, outputFilePath } = config;
 
   if (defaultRequestLib === false && typeof topImportPkgTemplate !== 'function') {
@@ -116,72 +112,54 @@ async function callGenerator(config: Config, cwd: string, index = 0) {
     return false;
   }
 
-  const { serverType, gitRepoSettings } = config;
-  if (serverType === 'git-repo' && GitRepoGenerator.configValidator(config)) {
-    const label = chalk.green(`${gitRepoSettings?.repository} 耗时`);
-    console.time(label);
-    spinner.start();
-    const gitRepoGenertorInstance = new GitRepoGenerator(config, { cwd });
-    const output = await gitRepoGenertorInstance.generate();
-    await gitRepoGenertorInstance.write(output);
-    const outTips = Object.keys(output).length
-      ? `${serverType} 模式代码生成成功，文件路径：${outputFilePath} `
-      : `未找到需要更新的接口`;
-    spinner.clear();
-    log.log(chalk.yellowBright(`\n${index + 1}.------------------------------- `));
-    log.success(outTips);
-    console.timeEnd(label);
-    log.log(chalk.yellowBright('---------------------------------\n'));
-    // spinner.render();
-  } else {
-    const label = chalk.green(`${config.serverUrl} 耗时`);
-    console.time(label);
-    let projects = config.projects;
-    if (serverType === 'yapi' && config.yapiUrlList?.length) {
-      const res = await yapiUrlParser(config);
-      if (res.parseResultList?.length) {
-        spinner.clear();
-        log.info(`URL 解析结果: `);
-        log.table(res.parseResultList);
-      }
-      projects = res.projects;
-    }
-    spinner.start();
-    const generator = new Generator(
-      {
-        ...config,
-        projects
-      },
-      { cwd }
-    );
-    await generator.prepare();
-    const output = await generator.generate();
-    await generator.write(output);
-    spinner.clear();
-    log.log(chalk.yellowBright(`\n${index + 1}.------------------------- `));
-    log.success(`${serverType} 模式代码生成成功，文件路径：${outputFilePath} `);
-    console.timeEnd(label);
-    log.log(chalk.yellowBright('---------------------------\n'));
-    // spinner.render();
-    await generator.destroy();
-  }
+  const { serverType, } = config;
 
-  // 如果不是只需要类型声明，则需要检测基础请求库是否安装
-  if (!config.typesOnly && defaultRequestLib) {
-    await packageCheck('@medlinker/med-request');
+  const label = chalk.green(`${config.serverUrl} 耗时`);
+  console.time(label);
+  let projects = config.projects;
+  if (serverType === 'yapi' && config.yapiUrlList?.length) {
+    const res = await yapiUrlParser(config);
+    if (res.parseResultList?.length) {
+      spinner.clear();
+      log.info(`URL 解析结果: `);
+      log.table(res.parseResultList);
+    }
+    projects = res.projects;
   }
+  spinner.start();
+  const generator = new Generator(
+    {
+      ...config,
+      projects
+    },
+    { cwd }
+  );
+  await generator.prepare();
+  const output = await generator.generate();
+  await generator.write(output);
+  spinner.clear();
+  log.success(`${serverType} 模式代码生成成功，文件路径：${outputFilePath} `);
+  console.timeEnd(label);
+  // spinner.render();
+  await generator.destroy();
+
+  // TODO: 如果不是只需要类型声明，则需要检测基础请求库是否安装
+  // if (!config.typesOnly && defaultRequestLib) {
+  //   await packageCheck('@you-lib/request');
+  // }
 
   // 是否启用拦截器，拦截器由使用到change-case
   if (config.jsonSchema?.enabled) {
     await packageCheck('change-case');
   }
+
   return true;
 }
 
 export async function execute() {
   // const timeLabel = chalk.green('总耗时');
   // console.time(timeLabel);
-  const { cwd, configFileExist, configFile, configTSFile } = await getConfigFilePath();
+  const { cwd, configFileExist, configFile } = await getConfigFilePath();
 
   if (!configFileExist) {
     return log.error(`Not Found: ${configFile} `);
@@ -196,10 +174,10 @@ export async function execute() {
 
     spinner.start('正在获取数据并生成代码... \n');
     await asyncFnArrayOrderRun(
-      config.map((configItem, index) => {
+      config.map((configItem) => {
         return async () => {
           await prepareIndexFile(configItem);
-          callGenerator(configItem, cwd, index);
+          callGenerator(configItem, cwd);
         };
       })
     );
@@ -243,7 +221,7 @@ export default class CLI {
       .command<any>(
         'init',
         '生成配置文件',
-        y => { },
+        () => { },
         (argv: any) => {
           const { } = argv;
           initConfigFile();
@@ -252,7 +230,7 @@ export default class CLI {
       .command<any>(
         'gen',
         '生成接口类型声明和方法',
-        y => { },
+        () => { },
         (argv: any) => {
           const { } = argv;
           execute();
