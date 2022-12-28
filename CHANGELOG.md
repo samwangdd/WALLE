@@ -1,0 +1,26 @@
+# Change Log
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+<a name="2.10.0"></a>
+# 2.10.0 (2022-12-28)
+
+
+### Bug Fixes
+
+* **cli:** delete git generate control ([db281a2](https://github.com/samwangdd/WALLE/commit/db281a2))
+* ./bin/apits ([d2de526](https://github.com/samwangdd/WALLE/commit/d2de526))
+* clean file ([e78d013](https://github.com/samwangdd/WALLE/commit/e78d013))
+* function name error ([b7be6c5](https://github.com/samwangdd/WALLE/commit/b7be6c5))
+* optimize tips ([68cab53](https://github.com/samwangdd/WALLE/commit/68cab53))
+* remove redundancy ([5595780](https://github.com/samwangdd/WALLE/commit/5595780))
+* set default server url ([495552d](https://github.com/samwangdd/WALLE/commit/495552d))
+
+
+### Features
+
+* add eslint ([f2d3779](https://github.com/samwangdd/WALLE/commit/f2d3779))
+* add father config ([e905627](https://github.com/samwangdd/WALLE/commit/e905627))
+* array utils ([81d8a46](https://github.com/samwangdd/WALLE/commit/81d8a46))
+* init ([8b05f14](https://github.com/samwangdd/WALLE/commit/8b05f14))
+* optimize log ([c787491](https://github.com/samwangdd/WALLE/commit/c787491))
