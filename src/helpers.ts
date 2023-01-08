@@ -5,10 +5,6 @@ import type { Config, RequestConfig, RequestFunctionParams } from './types';
 import { checkCookie } from './utils/cookie';
 import { spinner } from './UI/spinner';
 import { login, loginPrompts } from './main/requestYapiData';
-import SimpleGit from 'simple-git';
-import { gitRepoCheckTmpPath } from './constant/common';
-import fs from 'fs-extra';
-import * as log from './utils/console';
 
 /**
  * 定义配置。
@@ -256,29 +252,6 @@ export const prepareYapiLogin = async (configs: Config[]) => {
             spinner.start();
             await login(info, item);
           }
-        };
-      })
-    );
-  }
-};
-
-/**
- *确保有git-repo仓库的权限
- * @param configs
- */
-export const prepareGitRepoLogin = async (configs: Config[]) => {
-  await fs.ensureDir(gitRepoCheckTmpPath);
-  const gitInstance = SimpleGit(gitRepoCheckTmpPath);
-  const gitrepoList = configs.filter(item => item.serverType === 'git-repo');
-  if (gitrepoList.length) {
-    await asyncFnArrayOrderRun(
-      gitrepoList.map(i => {
-        return async () => {
-          await fs.emptyDir(gitRepoCheckTmpPath);
-          await gitInstance.clone(i.gitRepoSettings?.repository || '').catch(() => {
-            log.error(`${i.gitRepoSettings?.repository}: 请确保项目存在并拥护权限`);
-            process.exit();
-          });
         };
       })
     );
