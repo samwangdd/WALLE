@@ -423,7 +423,6 @@ export function topNotesContent(): string {
    * Created By api-typescript
    * @Author ${process.env.USERNAME}
    */
-
   `;
 }
 

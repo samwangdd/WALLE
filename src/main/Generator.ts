@@ -1,3 +1,6 @@
+/** 
+ * 生成接口模板代码
+*/
 /* eslint-disable no-unused-vars */
 import * as changeCase from 'change-case';
 import dayjs from 'dayjs';
@@ -66,7 +69,8 @@ const getDataKeySetStr = (method: string) => {
   }
   return 'data';
 };
-// 处理路劲参数
+
+// 处理路径参数
 function handlePathParam(path: string) {
   if (path.match(/\{(\w+)\}/)) {
     // eslint-disable-next-line no-template-curly-in-string
@@ -75,6 +79,7 @@ function handlePathParam(path: string) {
 
   return JSON.stringify(path);
 }
+
 // 默认请求函数体生成模板
 function defaultRequestFunctionTemplate(props: RequestFunctionTemplateProps, config?: SyntheticalConfig): string {
   const { requestFunctionExtraParams } = config || {};
@@ -385,7 +390,7 @@ export class Generator {
     return changeCase.camelCase(prefix);
   }
 
-  /** 生成接口代码 */
+  /** 生成 TS 接口 */
   async generateInterfaceCode(syntheticalConfig: SyntheticalConfig, interfaceInfo: Interface, categoryUID: string) {
     const extendedInterfaceInfo: ExtendedInterface = {
       ...interfaceInfo,
@@ -404,7 +409,6 @@ export class Generator {
       : changeCase.pascalCase(`${requestFunctionName}Response`);
     const requestDataJsonSchema = getRequestDataJsonSchema(extendedInterfaceInfo);
     // 入参
-
     const requestDataType = await jsonSchemaToType(requestDataJsonSchema, requestDataTypeName);
     const responseDataJsonSchema = getResponseDataJsonSchema(extendedInterfaceInfo, syntheticalConfig.dataKey);
     const responseDataType = await jsonSchemaToType(responseDataJsonSchema, responseDataTypeName);
@@ -521,16 +525,16 @@ export class Generator {
     }
 
     const code = dedent`
-      ${genComment(title => `接口 ${title} 的 **请求类型**`)}
+      ${genComment(title => `接口 ${title} 的 **TS 请求类型**`)}
       ${requestDataType.trim()}
 
-      ${genComment(title => `接口 ${title} 的 **返回类型**`)}
+      ${genComment(title => `接口 ${title} 的 **TS 返回类型**`)}
       ${responseDataType.trim()}
 
       ${syntheticalConfig.typesOnly
         ? ''
         : dedent`
-            ${genComment(title => `接口 ${title} 的 **请求函数**`)}
+            ${genComment(title => `接口 ${title}`)}
             ${requestFunctionTemplate(
           {
             baseURL: baseUrl,
@@ -541,7 +545,6 @@ export class Generator {
           },
           syntheticalConfig
         )}
-
           `
       }
     `;

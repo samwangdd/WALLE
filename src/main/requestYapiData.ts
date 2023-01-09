@@ -124,10 +124,11 @@ type FetchApiData = {
 };
 
 /**
- *
- * @param url 请求方法
- * @param query
- * @returns
+ * fetch 封装
+ * @param path 
+ * @param data 
+ * @param config 
+ * @returns 
  */
 export const fetchApi = async function <T>(path: string, data: FetchApiData, config?: ApiConfig) {
   const { serverUrl = DefaultServerUrl, serverType, errorExit = true } = config || {};

@@ -37,8 +37,7 @@ TSNode.register({
     esModuleInterop: true,
     allowSyntheticDefaultImports: true,
     importHelpers: false,
-    // 转换 js，支持在 apits.config.js 里使用最新语法
-    allowJs: true,
+    allowJs: true, // 转换 js，支持在 apits.config.js 里使用最新语法
     lib: ['es2017']
   }
 });
@@ -170,7 +169,6 @@ export async function execute() {
     const config: Config[] = require(configFile).default;
 
     await prepareYapiLogin(config);
-    // await prepareGitRepoLogin(config);
 
     spinner.start('正在获取数据并生成代码... \n');
     await asyncFnArrayOrderRun(

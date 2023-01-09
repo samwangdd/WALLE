@@ -1,5 +1,5 @@
 /**
- * genRequest
+ * genRequest 生成请求函数模板
  * create by samwangdd on 2022-12-11
  */
 import fs from 'fs-extra';
@@ -23,7 +23,6 @@ export default async (config: Config) => {
 
   const content = `
   ${topNotesContent()}
-
   import request from '@medlinker/med-request';
   ${inspector ? "import * as jsonScheme from './responseDataJsonSchema'" : ''}
 
