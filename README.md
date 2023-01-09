@@ -21,9 +21,15 @@ apits gen
 # install dependencies
 yarn && yarn link # link to global
 
-yarn link api-typescript # other project link to local
+yarn link api-typescript # In other project you want to link apits
 ```
 [Development Doc](doc/development.md)
+
+add scripts in `package.json` script
+```json
+  "api:init": "cross-env apits init",
+  "api:gen": "cross-env apits gen"
+```
 
 ## Commit Type
 > build, ci, docs, feat, fix, perf, refactor, revert, style, test
