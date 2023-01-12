@@ -57,7 +57,7 @@ interface OutputFileList {
   };
 }
 
-// 默认顶部依赖生成模板
+// 顶部请求依赖模板
 function defaultTopImportPkgTemplate(config?: Config) {
   const { defaultRequestLib } = config || {};
   return !defaultRequestLib ? `import request from '../request'` : '';
@@ -89,7 +89,7 @@ function defaultRequestFunctionTemplate(props: RequestFunctionTemplateProps, con
   const method = extendedInterfaceInfo.method.toLowerCase();
   let finalBaseUrl = '';
   if (baseURL?.match(/^\[code\]:/)) {
-    // 如果使用[code]开头则表示，作为代码段执行，否则仅作为字符串
+    // 如果使用[code]开头则表示，作为代码段执行；否则仅作为字符串
     finalBaseUrl = baseURL.replace(/^\[code\]:/, '');
   } else {
     finalBaseUrl = `"${baseURL}"`;
@@ -252,9 +252,10 @@ export class Generator {
                 interfaceInfo,
                 categoryUID
               );
-              const weights: number[] = [Number(catId), catIndex];
+              const weights: number[] = [Number(catId), catIndex]; // 分类权重
               categoryCode.push(code);
               categoryResponseDataJsonSchemaContent.push(responseDataJsonSchema);
+
               return {
                 categoryUID,
                 outputFilePath: finalOutputFilePath,
@@ -336,7 +337,6 @@ export class Generator {
         const rawOutputContent = dedent`
           ${topNotesContent()}
           ${topImportPkgTemplate(config)}
-
           ${content.join('\n\n').trim()}
         `;
 
@@ -511,6 +511,7 @@ export class Generator {
     const requestFunctionTemplate =
       syntheticalConfig.requestFunctionTemplate ||
       (syntheticalConfig.proxyInterface ? adminRequestFunctionTemplate : defaultRequestFunctionTemplate);
+
     const baseURL = syntheticalConfig.baseURL;
     let baseUrl;
     try {

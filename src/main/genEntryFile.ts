@@ -1,5 +1,5 @@
 /**
- * 生成入口文件
+ * 生成 /api/index.ts 入口文件
  */
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -12,7 +12,7 @@ import { formatContent, topNotesContent } from '../utils/common';
 import { jsonSchemeFileHeader } from './responseDataJsonSchemaHandler';
 import * as log from '../utils/console';
 
-/** 提前准备好index文件 */
+/** 提前准备好 src/api/index 文件 */
 export async function prepareIndexFile(config: Config) {
   const indexFilePath = genOutputFilePath(config, 'index.ts');
   if (!(await fs.pathExists(indexFilePath))) {
@@ -48,7 +48,7 @@ export default async (config: Config, categoryList: { categoryId: string; projec
     formatContent(dedent`${content}`, prettierConfigPath)
   );
 
-  // 输出 responseDataJsonSchema文件
+  // 输出 responseDataJsonSchema 文件
   const inspector = config.jsonSchema?.enabled;
   if (inspector) {
     const exportAllSchema = categoryList.map(({ categoryId, projectId }) => {
@@ -111,6 +111,7 @@ export const genGitRepoIndex = async (config: Config, filePathList: string[]) =>
     }
     return list;
   }, [] as string[]);
+
   // const content = `
   //   // <-Logs->
   //   ${notes || topNotesContent()}

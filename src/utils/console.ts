@@ -16,7 +16,7 @@ export function log(message: ConsolaLogObject | any, ...args: any[]): void {
  * @param args
  */
 export function error(message: ConsolaLogObject | any, ...args: any[]): void {
-  consola.error(chalk.magenta(`❌ ${message}`), ...args);
+  consola.error(chalk.magenta(`${message}`), ...args);
 }
 
 /**

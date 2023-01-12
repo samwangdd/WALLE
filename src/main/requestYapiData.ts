@@ -18,7 +18,7 @@ import {
   yapiApiCatInterfaceList
 } from '../constant/common';
 import * as log from '../utils/console';
-import { spinner } from '../UI/spinner';
+import { spinner } from '../components/spinner';
 import { autoAsyncSplitQueue } from '../helpers';
 
 type ResponseData<T = Record<string, any>> = {
@@ -98,7 +98,7 @@ export type LoginResponseData = {
  * @param config
  * @returns
  */
-export const login = async function (data: LoginProps, config?: SyntheticalConfig) {
+export const loginYapi = async function (data: LoginProps, config?: SyntheticalConfig) {
   const { serverUrl = DefaultServerUrl } = config || {};
   const url = `${serverUrl}${yapiApiLogin}`;
   const res = await client<ResponseData<LoginResponseData>>(url, { method: 'post', json: data }).catch(errmsg => {
@@ -138,7 +138,7 @@ export const fetchApi = async function <T>(path: string, data: FetchApiData, con
     log.log(data);
     const info = await loginPrompts(serverUrl);
     spinner.start();
-    await login(info);
+    await loginYapi(info);
   }
   const method = config?.method || 'get';
   const url = path.startsWith('http') ? path : `${serverUrl}${path}`;

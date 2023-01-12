@@ -3,8 +3,8 @@
 import type { AppendOptions } from 'form-data';
 import type { Config, RequestConfig, RequestFunctionParams } from './types';
 import { checkCookie } from './utils/cookie';
-import { spinner } from './UI/spinner';
-import { login, loginPrompts } from './main/requestYapiData';
+import { spinner } from './components/spinner';
+import { loginYapi, loginPrompts } from './main/requestYapiData';
 
 /**
  * 定义配置。
@@ -250,7 +250,7 @@ export const prepareYapiLogin = async (configs: Config[]) => {
             spinner.clear();
             const info = await loginPrompts(item.serverUrl);
             spinner.start();
-            await login(info, item);
+            await loginYapi(info, item);
           }
         };
       })

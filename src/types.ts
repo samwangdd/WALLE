@@ -7,12 +7,12 @@ import { ParsedPath } from 'path';
 
 export type requestFunctionTemplateType = (props: RequestFunctionTemplateProps, config?: SyntheticalConfig) => string;
 
-/** 顶部依赖生成模板函数 */
-/** 生成器参数 */
 export type topImportPkgTemplateType = () => string;
+
+/** 生成器参数 */
 export interface GenTemplateType {
-  requestFunctionTemplate?: requestFunctionTemplateType;
-  topImportPkgTemplate?: topImportPkgTemplateType;
+  topImportPkgTemplate?: topImportPkgTemplateType; // 顶部导入依赖项，模板函数
+  requestFunctionTemplate?: requestFunctionTemplateType; // 请求模板函数
 }
 export interface GeneratorOptions {
   cwd: string;
@@ -522,6 +522,11 @@ export interface SharedConfig {
   comment?: CommentConfig;
 
   /**
+   * URL 的网关前缀
+   */
+  gatewayPrefix?: string;
+
+  /**
    * 预处理接口信息，返回新的接口信息。可返回 false 排除当前接口。
    *
    * 譬如你想对接口的 `path` 进行某些处理或者想排除某些接口，就可使用该方法。
@@ -573,7 +578,7 @@ export interface SharedConfig {
  */
 export interface CategoryConfig extends SharedConfig {
   /**
-   * 分类 ID。
+   * 分类 ID
    *
    * 获取方式：打开项目 --> 点开分类 --> 复制浏览器地址栏 `/api/cat_` 后面的数字。
    *
@@ -696,11 +701,9 @@ export interface DownloadGitRepoSettings {
  */
 export interface ServerConfig extends SharedConfig, GenTemplateType {
   /**
-   * 服务地址。若服务类型为 `yapi`，此处填其首页地址；若服务类型为 `swagger`，此处填其 json 地址。
-   *
-   * @小仓swagger https://patient-medication-qa.medlinker.com/swagger/doc.json
-   * @大仓git_repo  https://git.medlinker.com/foundations/api-swagger.git
-   * @yapi  ttp://yapi.int.medlinker.com/
+   * 服务地址
+   * 若服务类型为 `yapi`，此处填其首页地址；
+   * 若服务类型为 `swagger`，此处填其 json 地址。
    */
   serverUrl: string;
 
@@ -709,29 +712,27 @@ export interface ServerConfig extends SharedConfig, GenTemplateType {
    *
    * @default 'yapi'
    */
-  serverType?: 'yapi' | 'swagger' | 'git-repo';
-
-  /**
-   * 仓库设置
-   */
-  gitRepoSettings?: DownloadGitRepoSettings;
+  serverType?: 'yapi' | 'swagger';
 
   /**
    * 项目列表。
    */
   projects?: ProjectConfig | ProjectConfig[];
+
   /**
    * prettier代码格式化配置文件的路径
    *
    * @default process.cwd()
    */
   prettierConfigPath?: string;
+
   /**
    * 是否使用默认的请求库
    *
    * @default true
    */
   defaultRequestLib?: boolean;
+
   /**
    * 代理请求模式，所有请求均请求到指定接口
    */
@@ -743,6 +744,7 @@ export interface ServerConfig extends SharedConfig, GenTemplateType {
      */
     path?: string;
   };
+
   /**
    * 设置接口的baseURL
    *
@@ -755,10 +757,12 @@ export interface ServerConfig extends SharedConfig, GenTemplateType {
    ```
    */
   baseURL?: ((path: string) => string | undefined) | string;
+
   /**
    * 过滤接口
    */
   filter?: ((path: string, id?: number) => boolean) | RegExp | string[];
+
   /**
    * yapi页面链接地址列表
    * 通过url分析出项目id，接口id，分类id
@@ -766,11 +770,12 @@ export interface ServerConfig extends SharedConfig, GenTemplateType {
    @example
    ```
     `http://yapi.corp.hongsong.club/project/279/interface/api => 项目id：279`
-    `http://yapi.corp.hongsong.club/project/279/interface/api/cat_1061 =>项目id:279、分类id:1061`
+    `http://yapi.corp.hongsong.club/project/279/interface/api/cat_1061 => 项目id:279、分类id:1061`
     `http://yapi.corp.hongsong.club/project/279/interface/api/19343 => 项目id:279、接口id: 19343`
    ```
    */
   yapiUrlList?: string | string[];
+
   /**
    * 请求函数是否需要extra入参
    *
