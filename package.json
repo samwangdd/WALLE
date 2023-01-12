@@ -1,14 +1,14 @@
 {
   "name": "api-typescript",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "main": "./lib/index.js",
   "module": "./es/index.js",
   "bin": {
     "apits": "./bin/apits"
   },
   "scripts": {
-    "api:init": "tsnd debug/index.ts --type-check false init",
-    "api:gen": "tsnd debug/index.ts --type-check false gen",
+    "debug:init": "tsnd debug/index.ts --type-check false init",
+    "debug:gen": "tsnd debug/index.ts --type-check false gen",
     "build": "father build",
     "prepublish": "npm run build && standard-version && git push --follow-tags origin master && npm publish  --registry=https://registry.npmjs.org",
     "publishOnly": "npm run build"
