@@ -1,6 +1,6 @@
 {
   "name": "api-typescript",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "./lib/index.js",
   "module": "./es/index.js",
   "bin": {
@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "father build",
+    "start": "ts-node src/cli --type-check false",
     "test": "ts-node test/index.ts --type-check false",
     "gen": "ts-node test/gen.ts --type-check false gen",
     "init": "ts-node test/gen.ts --type-check false init",
@@ -87,6 +88,7 @@
     "shx": "^0.3.2",
     "standard-version": "^4.4.0",
     "tempy": "^0.3.0",
+    "ts-node-dev": "^2.0.0",
     "typedoc": "^0.14.2",
     "typescript-snapshots-plugin": "^1.7.0"
   },
