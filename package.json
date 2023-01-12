@@ -7,11 +7,9 @@
     "apits": "./bin/apits"
   },
   "scripts": {
+    "api:init": "tsnd debug/index.ts --type-check false init",
+    "api:gen": "tsnd debug/index.ts --type-check false gen",
     "build": "father build",
-    "start": "ts-node src/cli --type-check false",
-    "test": "ts-node test/index.ts --type-check false",
-    "gen": "ts-node test/gen.ts --type-check false gen",
-    "init": "ts-node test/gen.ts --type-check false init",
     "prepublish": "npm run build && standard-version && git push --follow-tags origin master && npm publish  --registry=https://registry.npmjs.org",
     "publishOnly": "npm run build"
   },
