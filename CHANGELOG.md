@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.0.17"></a>
+## [0.0.17](https://github.com/samwangdd/WALLE/compare/v0.0.16...v0.0.17) (2023-01-12)
+
+
+
 <a name="0.0.16"></a>
 ## [0.0.16](https://github.com/samwangdd/WALLE/compare/v0.0.15...v0.0.16) (2023-01-12)
 
