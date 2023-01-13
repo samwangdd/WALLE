@@ -522,9 +522,26 @@ export interface SharedConfig {
   comment?: CommentConfig;
 
   /**
-   * URL 的网关前缀
+   * URL 的网关前缀，`接口地址` 会自动添加该前缀。
+   * @type {string}
+   * @example '/gateway/api/user'
    */
   gatewayPrefix?: string;
+
+  /**
+   * 指定生成接口的属性（白名单）
+   * 如果为字符串，则只生成该属性的类型；如果为数组，则生成数组中的属性。
+   * @type {string | string[]}
+   */
+  includeInterfaceProps?: string | string[];
+
+  /**
+   * 排除生成接口的属性（黑名单）
+   *
+   * @type {string[]}
+   * @memberof SharedConfig
+   */
+  excludeInterfaceProps?: string[];
 
   /**
    * 预处理接口信息，返回新的接口信息。可返回 false 排除当前接口。

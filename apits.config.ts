@@ -10,8 +10,9 @@ export default defineConfig({
     },
     {
       token: 'fea472ac89837c7d39c9910915838a83c8b7dcc72e05596ad5a3a44a4f3dadb6',
-      categories: [{ id: 7644 }],
-      gatewayPrefix: '/gateway/user/api/',
+      gatewayPrefix: '/gateway/api/user',
+      includeInterfaceProps: 'data',
+      categories: [{ id: 7644, }],
     },
     {
       token: 'd93262cf7aa3bc578c090e52a3bb9b449075bf59c16a472875035e6dcf2bacb0',

@@ -5,12 +5,13 @@
 import JSON5 from 'json5';
 import Mock from 'mockjs';
 import path from 'path';
-import toJsonSchema from 'to-json-schema';
 import { castArray, forOwn, isArray, isEmpty, isObject } from 'vtils';
-import { compile, Options } from 'json-schema-to-typescript';
 import { Defined } from 'vtils/types';
-import { FileData } from '../helpers';
+import toJsonSchema from 'to-json-schema';
+import { compile, Options } from 'json-schema-to-typescript';
+import { JSONSchema4, JSONSchema4TypeName } from 'json-schema';
 import prettier from 'prettier';
+
 import {
   Interface,
   PropDefinition,
@@ -19,9 +20,10 @@ import {
   RequestFormItemType,
   Required,
   ResponseBodyType,
-  Config
-} from '../types';
-import { JSONSchema4, JSONSchema4TypeName } from 'json-schema';
+  Config,
+  SyntheticalConfig
+} from '@/types';
+import { FileData } from '@/helpers';
 
 /**
  * 抛出错误。
@@ -57,12 +59,13 @@ export function getNormalizedRelativePath(from: string, to: string) {
 }
 
 /**
- * 原地处理 JSONSchema。
+ * 原地处理 JSONSchema（核心逻辑）
  *
  * @param jsonSchema 待处理的 JSONSchema
  * @returns 处理后的 JSONSchema
  */
-export function processJsonSchema<T extends JSONSchema4>(jsonSchema: T): T {
+export function processJsonSchema<T extends JSONSchema4>(jsonSchema: T, config?: SyntheticalConfig | string | number): T {
+  console.log('%c [ config ]-68', 'font-size:13px; background:#9e1b42; color:#e25f86;', config)
   /* istanbul ignore if */
   if (!isObject(jsonSchema)) return jsonSchema;
 
@@ -102,7 +105,10 @@ export function processJsonSchema<T extends JSONSchema4>(jsonSchema: T): T {
     jsonSchema.type = isMultiple ? types : types[0];
   }
 
-  // Mock.toJSONSchema 产生的 properties 为数组，然而 JSONSchema4 的 properties 为对象
+  /**
+   * 兼容处理，将数组转换为对象
+   * JSONSchema4 的 properties 为对象，Mock.toJSONSchema 产生的 properties 为数组
+   */
   if (isArray(jsonSchema.properties)) {
     jsonSchema.properties = (jsonSchema.properties as JSONSchema4[]).reduce<Defined<JSONSchema4['properties']>>(
       (props, js) => {
@@ -113,22 +119,36 @@ export function processJsonSchema<T extends JSONSchema4>(jsonSchema: T): T {
     );
   }
 
-  // 移除字段名称首尾空格
+  // 递归处理，
   if (jsonSchema.properties) {
+    // const propertyList = Object.keys(jsonSchema.properties);
+    // // 处理 includeInterfaceProps 中的属性
+    // if (isObject(config) && config.includeInterfaceProps) {
+    //   // 如果 includeInterfaceProps 是字符串，则直接取该属性，并赋值
+    //   if (isString(config.includeInterfaceProps) && propertyList.includes(config.includeInterfaceProps)) {
+    //     jsonSchema.properties = jsonSchema.properties[config.includeInterfaceProps];
+    //   } else if (isArray(config.includeInterfaceProps)) {
+    //     // 如果 includeInterfaceProps 是数组，则取数组中的属性
+    //     jsonSchema.properties = pick(jsonSchema.properties, config.includeInterfaceProps);
+    //   }
+    // }
+
+    // 移除字段名称首尾空格
     forOwn(jsonSchema.properties, (_, prop) => {
       const propDef = jsonSchema.properties![prop];
       delete jsonSchema.properties![prop];
       jsonSchema.properties![(prop as string).trim()] = propDef;
     });
+
     jsonSchema.required = jsonSchema.required && (jsonSchema.required as string[]).map(prop => prop.trim());
   }
 
-  // 继续处理对象的子元素
+  // 递归处理对象的子元素
   if (jsonSchema.properties) {
     forOwn(jsonSchema.properties, processJsonSchema);
   }
 
-  // 继续处理数组的子元素
+  // 递归处理数组的子元素
   if (jsonSchema.items) {
     castArray(jsonSchema.items).forEach(processJsonSchema);
   }
@@ -152,13 +172,13 @@ export function processJsonSchema<T extends JSONSchema4>(jsonSchema: T): T {
 }
 
 /**
- * 将 JSONSchema 字符串转为 JSONSchema 对象。
+ * 将 JSONSchema 字符串转为 JSONSchema 对象
  *
  * @param str 要转换的 JSONSchema 字符串
  * @returns 转换后的 JSONSchema 对象
  */
-export function jsonSchemaStringToJsonSchema(str: string): JSONSchema4 {
-  return processJsonSchema(JSON.parse(str));
+export function jsonSchemaStringToJsonSchema(str: string, config?: SyntheticalConfig): JSONSchema4 {
+  return processJsonSchema(JSON.parse(str), config);
 }
 
 /**
@@ -167,7 +187,7 @@ export function jsonSchemaStringToJsonSchema(str: string): JSONSchema4 {
  * @param json JSON 数据
  * @returns JSONSchema 对象
  */
-export function jsonToJsonSchema(json: object): JSONSchema4 {
+export function jsonToJsonSchema(json: object, config: SyntheticalConfig): JSONSchema4 {
   const schema = toJsonSchema(json, {
     required: false,
     arrays: {
@@ -187,7 +207,8 @@ export function jsonToJsonSchema(json: object): JSONSchema4 {
     }
   });
   delete schema.description;
-  return processJsonSchema(schema as any);
+
+  return processJsonSchema(schema as any, config);
 }
 
 /**
@@ -280,7 +301,7 @@ export async function jsonSchemaToType(jsonSchema: JSONSchema4, typeName: string
   return code.replace(fakeTypeName, typeName).trim();
 }
 
-export function getRequestDataJsonSchema(interfaceInfo: Interface): JSONSchema4 {
+export function getRequestDataJsonSchema(interfaceInfo: Interface, config: SyntheticalConfig): JSONSchema4 {
   let jsonSchema!: JSONSchema4;
 
   switch (interfaceInfo.req_body_type) {
@@ -294,15 +315,16 @@ export function getRequestDataJsonSchema(interfaceInfo: Interface): JSONSchema4 
         }))
       );
       break;
+
     case RequestBodyType.json:
       if (interfaceInfo.req_body_other) {
         jsonSchema = interfaceInfo.req_body_is_json_schema
-          ? jsonSchemaStringToJsonSchema(interfaceInfo.req_body_other)
-          : jsonToJsonSchema(JSON5.parse(interfaceInfo.req_body_other));
+          ? jsonSchemaStringToJsonSchema(interfaceInfo.req_body_other, config)
+          : jsonToJsonSchema(JSON5.parse(interfaceInfo.req_body_other), config);
       }
       break;
+
     default:
-      /* istanbul ignore next */
       break;
   }
 

@@ -70,7 +70,12 @@ const getDataKeySetStr = (method: string) => {
   return 'data';
 };
 
-// 处理路径参数
+/**
+ * 处理路径参数
+ *
+ * @param {string} path
+ * @return {string} 处理后的路径
+ */
 function handlePathParam(path: string) {
   if (path.match(/\{(\w+)\}/)) {
     // eslint-disable-next-line no-template-curly-in-string
@@ -82,8 +87,8 @@ function handlePathParam(path: string) {
 
 // 默认请求函数体生成模板
 function defaultRequestFunctionTemplate(props: RequestFunctionTemplateProps, config?: SyntheticalConfig): string {
-  const { requestFunctionExtraParams } = config || {};
   const { baseURL, requestFunctionName, requestDataTypeName, responseDataTypeName, extendedInterfaceInfo } = props;
+  const { requestFunctionExtraParams, gatewayPrefix } = config || {};
   const { req_params, req_query } = extendedInterfaceInfo;
   const hasData = req_params.length || req_query.length;
   const method = extendedInterfaceInfo.method.toLowerCase();
@@ -94,10 +99,12 @@ function defaultRequestFunctionTemplate(props: RequestFunctionTemplateProps, con
   } else {
     finalBaseUrl = `"${baseURL}"`;
   }
+
+  const url = gatewayPrefix ? `${gatewayPrefix}${extendedInterfaceInfo.path}` : extendedInterfaceInfo.path;
   return `export const ${requestFunctionName} = (data${hasData ? '' : '?'}: ${requestDataTypeName}${requestFunctionExtraParams ? `,extra?:Record<string,any>` : ''
     }) => {
     return request.${method}<${requestDataTypeName},${responseDataTypeName}>(${handlePathParam(
-      extendedInterfaceInfo.path
+      url
     )}, {
       ${getDataKeySetStr(method)},
       ${baseURL ? `baseURL: ${finalBaseUrl},` : ''}
@@ -186,7 +193,7 @@ export class Generator {
 
       // spinnerInstance.stop();
 
-      // 按分类分组
+      // 按 category 分组
       let categoryInterfaceList: Record<number | string, InterfaceList> = {};
 
       allInterfaceList.forEach((item, index) => {
@@ -196,8 +203,8 @@ export class Generator {
 
       const { categories = [] } = project || {};
       if (categories && categories.length) {
-        const cids = categories.map(item => item.id);
-        categoryInterfaceList = pick(categoryInterfaceList, cids as readonly number[]) || {};
+        const ids = categories.map(item => item.id);
+        categoryInterfaceList = pick(categoryInterfaceList, ids as readonly number[]) || {};
       }
 
       return Promise.all(
