@@ -6,7 +6,7 @@ import * as log from '@/utils/console';
 import { packageCheck } from "@/utils/dependenciesHandler";
 
 import { Generator } from "./generator";
-import { yapiUrlParser } from "./yapiUrlAnalysis";
+import { yapiUrlParser } from "./yapiUrlParser";
 
 export default async function executeCLI(config: Config, cwd: string) {
   const { defaultRequestLib = true, topImportPkgTemplate, outputFilePath } = config;

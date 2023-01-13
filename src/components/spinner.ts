@@ -1,42 +1,42 @@
 import ora, { Ora } from 'ora';
 
 class Spin {
-  spinnerInstance: Ora;
+  spinner: Ora;
 
   constructor() {
-    this.spinnerInstance = ora();
+    this.spinner = ora();
   }
 
   clear() {
-    this.spinnerInstance.clear();
+    this.spinner.clear();
   }
 
   start(text?: string) {
-    this.spinnerInstance.start(text);
+    this.spinner.start(text);
   }
 
   succeed(text?: string) {
-    this.spinnerInstance.succeed(text);
+    this.spinner.succeed(text);
   }
 
   fail(text?: string) {
-    this.spinnerInstance.fail(text);
+    this.spinner.fail(text);
   }
 
   render() {
-    this.spinnerInstance.render();
+    this.spinner.render();
   }
 
   frame() {
-    this.spinnerInstance.frame();
+    this.spinner.frame();
   }
 
   info(text?: string) {
-    this.spinnerInstance.info(text);
+    this.spinner.info(text);
   }
 
   stop() {
-    this.spinnerInstance.stop();
+    this.spinner.stop();
   }
 }
 

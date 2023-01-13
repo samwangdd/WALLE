@@ -6,11 +6,13 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { dedent } from 'vtils';
-import { Config } from '../types';
-import { genOutputFilePath } from '../utils/getOutputPath';
-import { formatContent, topNotesContent } from '../utils/common';
+
+import { Config } from '@/types';
+import { genOutputFilePath } from '@/utils/getOutputPath';
+import { formatContent, topNotesContent } from '@/utils/common';
+import * as log from '@/utils/console';
+
 import { jsonSchemeFileHeader } from './responseDataJsonSchemaHandler';
-import * as log from '../utils/console';
 
 /** 提前准备好 src/api/index 文件 */
 export async function prepareIndexFile(config: Config) {

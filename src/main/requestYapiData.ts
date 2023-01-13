@@ -2,10 +2,10 @@
  * 获取yapi数据
  */
 import got, { Options } from 'got';
-import { CategoryList, Category, Project, SyntheticalConfig, Interface, BaseInterfaceInfo } from '../types';
 import prompts from 'prompts';
 import { isEmpty, omit } from 'vtils';
-import { cookieJar, checkCookie } from '../utils/cookie';
+
+import { CategoryList, Category, Project, SyntheticalConfig, Interface, BaseInterfaceInfo } from '@/types';
 import {
   DefaultServerUrl,
   ResponseErrorCode,
@@ -16,10 +16,11 @@ import {
   yapiApiInterfaceDetail,
   yapiApiToken,
   yapiApiCatInterfaceList
-} from '../constant/common';
-import * as log from '../utils/console';
-import { spinner } from '../components/spinner';
-import { autoAsyncSplitQueue } from '../helpers';
+} from '@/constant/common';
+import { cookieJar, checkCookie } from '@/utils/cookie';
+import * as log from '@/utils/console';
+import { spinner } from '@/components/spinner';
+import { autoAsyncSplitQueue } from '@/helpers';
 
 type ResponseData<T = Record<string, any>> = {
   errcode: number;
@@ -132,7 +133,7 @@ type FetchApiData = {
  */
 export const fetchApi = async function <T>(path: string, data: FetchApiData, config?: ApiConfig) {
   const { serverUrl = DefaultServerUrl, serverType, errorExit = true } = config || {};
-  // 如果有token，则忽略cookie鉴权
+  // 如果有token，则忽略登录提示
   if (serverType === 'yapi' && !config?.token && !(await checkCookie(serverUrl))) {
     spinner.stop();
     log.log(data);
@@ -415,7 +416,7 @@ export const fetchInterfaceById = async (id: number, config?: ApiConfig) => {
 };
 
 /**
- * 获取分类下的接口列表信息 by id
+ * 通过 categoryId 获取分类的接口列表信息
  */
 export const fetchCatInterfaceById = async (catid: number, config?: ApiConfig) => {
   const res = await fetchApi<{ list: BaseInterfaceInfo[]; count: number; total: number }>(
@@ -470,7 +471,7 @@ export const getInterfacesByCategoryIds = async (categoryIds: number[], config?:
 };
 
 /**
- * 获取项目信息和接口
+ * 获取 yapi 项目信息和接口
  * @param config
  * @returns
  */

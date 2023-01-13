@@ -1,9 +1,10 @@
-import type { Config } from '../types';
 import { castArray } from 'vtils';
-import { fetchInterfaceById, fetchProject } from './requestYapiData';
-import { filterHandler } from '../utils/common';
+import type { Config } from '@/types';
+import { filterHandler } from '@/utils/common';
 
-export type YapiUrlAnalysisResult = Config & {
+import { fetchInterfaceById, fetchProject } from './requestYapiData';
+
+export type YapiUrlParserResult = Config & {
   parseResultList?: { projectId: number | null; catId: number | null; interfaceId: number | null }[];
 };
 
@@ -12,7 +13,7 @@ export type YapiUrlAnalysisResult = Config & {
  * @param config
  * @returns
  */
-export const yapiUrlParser = async (config: Config): Promise<YapiUrlAnalysisResult> => {
+export const yapiUrlParser = async (config: Config): Promise<YapiUrlParserResult> => {
   const { yapiUrlList, filter, projects = [] } = config;
   const urls = castArray(yapiUrlList);
   const results: Record<
@@ -21,7 +22,7 @@ export const yapiUrlParser = async (config: Config): Promise<YapiUrlAnalysisResu
       catIds: Map<number, Set<number>>;
     }
   > = {};
-  const parseResultList: YapiUrlAnalysisResult['parseResultList'] = [];
+  const parseResultList: YapiUrlParserResult['parseResultList'] = [];
 
   // `http://yapi.corp.hongsong.club/project/279/interface/api => 项目id：279`
   // `http://yapi.corp.hongsong.club/project/279/interface/api/cat_1061 =>项目id:279、分类id:1061`
@@ -121,28 +122,28 @@ export const yapiUrlParser = async (config: Config): Promise<YapiUrlAnalysisResu
               filter: iIds.includes(-1)
                 ? undefined
                 : function (path: string, id?: number) {
-                    if (filter && filterHandler(filter)(path, id)) {
-                      return true;
-                    }
-                    if (iIds.length && !iIds.includes(id || 0)) {
-                      return false;
-                    }
-                    return true;
-                  }
-            });
-          } else {
-            const fFilter = catSet.filter || filter;
-            item.categories![catSetIndex].filter = iIds.includes(-1)
-              ? undefined
-              : (path: string, id?: number) => {
-                  if (fFilter && filterHandler(fFilter)(path, id)) {
+                  if (filter && filterHandler(filter)(path, id)) {
                     return true;
                   }
                   if (iIds.length && !iIds.includes(id || 0)) {
                     return false;
                   }
                   return true;
-                };
+                }
+            });
+          } else {
+            const fFilter = catSet.filter || filter;
+            item.categories![catSetIndex].filter = iIds.includes(-1)
+              ? undefined
+              : (path: string, id?: number) => {
+                if (fFilter && filterHandler(fFilter)(path, id)) {
+                  return true;
+                }
+                if (iIds.length && !iIds.includes(id || 0)) {
+                  return false;
+                }
+                return true;
+              };
           }
         });
       })
@@ -154,8 +155,6 @@ export const yapiUrlParser = async (config: Config): Promise<YapiUrlAnalysisResu
       parseResultList
     };
   }
-
-  console.log(11111);
 
   return config;
 };

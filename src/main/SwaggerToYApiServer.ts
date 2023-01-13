@@ -5,8 +5,9 @@ import onExit from 'signal-exit';
 import url from 'url';
 import { AsyncReturnType } from 'vtils/types';
 import { isEmpty } from 'vtils';
-import { swaggerJsonToYApiData } from './swaggerJsonToYApiData';
 import { OpenAPIV2 as SwaggerType } from 'openapi-types';
+
+import { swaggerJsonToYApiData } from './swaggerJsonToYApiData';
 
 export interface SwaggerToYApiServerOptions {
   swaggerJsonUrl: string;

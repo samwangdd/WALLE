@@ -4,9 +4,10 @@
  */
 import fs from 'fs-extra';
 import { dedent } from 'vtils';
-import { Config } from '../types';
-import { genOutputFilePath } from '../utils/getOutputPath';
-import { formatContent, topNotesContent } from '../utils/common';
+
+import { Config } from '@/types';
+import { genOutputFilePath } from '@/utils/getOutputPath';
+import { formatContent, topNotesContent } from '@/utils/common';
 
 export default async (config: Config) => {
   const { prettierConfigPath, defaultRequestLib = true } = config;
@@ -44,15 +45,14 @@ export default async (config: Config) => {
   instance.interceptor.res((r) => {
     const { data, config } = r;
     if (data.errcode === 0 || data.code === 0) {
-      ${
-        inspector
-          ? `try{
+      ${inspector
+      ? `try{
         jsonScheme.runner(config.url,data.data,jsonScheme)
       }catch(e){
         console.log(e)
       }`
-          : ''
-      }
+      : ''
+    }
 
       return data.data;
     }

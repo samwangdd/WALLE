@@ -414,7 +414,7 @@ export class Generator {
     const responseDataTypeName = isFunction(syntheticalConfig.getResponseDataTypeName)
       ? await syntheticalConfig.getResponseDataTypeName(extendedInterfaceInfo, changeCase)
       : changeCase.pascalCase(`${requestFunctionName}Response`);
-    const requestDataJsonSchema = getRequestDataJsonSchema(extendedInterfaceInfo);
+    const requestDataJsonSchema = getRequestDataJsonSchema(extendedInterfaceInfo, syntheticalConfig);
     // 入参
     const requestDataType = await jsonSchemaToType(requestDataJsonSchema, requestDataTypeName);
     const responseDataJsonSchema = getResponseDataJsonSchema(extendedInterfaceInfo, syntheticalConfig.dataKey);
