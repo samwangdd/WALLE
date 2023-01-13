@@ -7,8 +7,8 @@
     "apits": "./bin/apits"
   },
   "scripts": {
-    "api:init": "tsnd -r tsconfig-paths/register debug/index.ts --type-check false init",
-    "api:gen": "tsnd -r tsconfig-paths/register debug/index.ts --type-check false gen",
+    "debug": "tsnd -r tsconfig-paths/register debug/index.ts --type-check false gen",
+    "debug:init": "tsnd -r tsconfig-paths/register debug/index.ts --type-check false init",
     "build": "father build",
     "prepublish": "npm run build && standard-version && git push --follow-tags origin master && npm publish  --registry=https://registry.npmjs.org",
     "publishOnly": "npm run build"
