@@ -1,6 +1,6 @@
 {
   "name": "api-typescript",
-  "version": "0.0.17",
+  "version": "0.1.0",
   "main": "./lib/index.js",
   "module": "./es/index.js",
   "bin": {
@@ -33,6 +33,7 @@
     "json-schema-to-typescript": "^10.0.2",
     "json5": "^2.1.0",
     "mockjs": "^1.0.1-beta3",
+    "module-alias": "^2.2.2",
     "ora": "5.4.1",
     "prettier": "^2.2.1",
     "prompts": "^2.0.4",

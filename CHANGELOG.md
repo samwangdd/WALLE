@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.0"></a>
+# [0.1.0](https://github.com/samwangdd/WALLE/compare/v0.0.17...v0.1.0) (2023-01-16)
+
+
+### Features
+
+* support gatewayPrefix ([a3b3a7d](https://github.com/samwangdd/WALLE/commit/a3b3a7d))
+
+
+
 <a name="0.0.17"></a>
 ## [0.0.17](https://github.com/samwangdd/WALLE/compare/v0.0.16...v0.0.17) (2023-01-12)
 
