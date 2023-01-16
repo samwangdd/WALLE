@@ -414,6 +414,7 @@ export class Generator {
     const responseDataTypeName = isFunction(syntheticalConfig.getResponseDataTypeName)
       ? await syntheticalConfig.getResponseDataTypeName(extendedInterfaceInfo, changeCase)
       : changeCase.pascalCase(`${requestFunctionName}Response`);
+    // 请求参数及接口
     const requestDataJsonSchema = getRequestDataJsonSchema(extendedInterfaceInfo, syntheticalConfig);
     // 入参
     const requestDataType = await jsonSchemaToType(requestDataJsonSchema, requestDataTypeName);

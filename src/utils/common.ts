@@ -5,7 +5,7 @@
 import JSON5 from 'json5';
 import Mock from 'mockjs';
 import path from 'path';
-import { castArray, forOwn, isArray, isEmpty, isObject } from 'vtils';
+import { castArray, forOwn, isArray, isEmpty, isObject, isString, pick } from 'vtils';
 import { Defined } from 'vtils/types';
 import toJsonSchema from 'to-json-schema';
 import { compile, Options } from 'json-schema-to-typescript';
@@ -65,7 +65,6 @@ export function getNormalizedRelativePath(from: string, to: string) {
  * @returns 处理后的 JSONSchema
  */
 export function processJsonSchema<T extends JSONSchema4>(jsonSchema: T, config?: SyntheticalConfig | string | number): T {
-  console.log('%c [ config ]-68', 'font-size:13px; background:#9e1b42; color:#e25f86;', config)
   /* istanbul ignore if */
   if (!isObject(jsonSchema)) return jsonSchema;
 
@@ -119,20 +118,22 @@ export function processJsonSchema<T extends JSONSchema4>(jsonSchema: T, config?:
     );
   }
 
-  // 递归处理，
+  // 处理 properties
   if (jsonSchema.properties) {
-    // const propertyList = Object.keys(jsonSchema.properties);
-    // // 处理 includeInterfaceProps 中的属性
-    // if (isObject(config) && config.includeInterfaceProps) {
-    //   // 如果 includeInterfaceProps 是字符串，则直接取该属性，并赋值
-    //   if (isString(config.includeInterfaceProps) && propertyList.includes(config.includeInterfaceProps)) {
-    //     jsonSchema.properties = jsonSchema.properties[config.includeInterfaceProps];
-    //   } else if (isArray(config.includeInterfaceProps)) {
-    //     // 如果 includeInterfaceProps 是数组，则取数组中的属性
-    //     jsonSchema.properties = pick(jsonSchema.properties, config.includeInterfaceProps);
-    //   }
-    // }
+    const propertyList = Object.keys(jsonSchema.properties);
+    // 处理 assignInterfaceProps 中的属性
+    if (isObject(config) && config.assignInterfaceProps) {
+      // 如果 assignInterfaceProps 是字符串，则直接取该属性，并赋值
+      if (isString(config.assignInterfaceProps) && propertyList.includes(config.assignInterfaceProps)) {
+        jsonSchema.properties = jsonSchema.properties[config.assignInterfaceProps]?.properties;
+      } else if (isArray(config.assignInterfaceProps)) {
+        // 如果 assignInterfaceProps 是数组，则取数组中的属性
+        jsonSchema.properties = pick(jsonSchema.properties, config.assignInterfaceProps);
+      }
+    }
+  }
 
+  if (jsonSchema.properties) {
     // 移除字段名称首尾空格
     forOwn(jsonSchema.properties, (_, prop) => {
       const propDef = jsonSchema.properties![prop];

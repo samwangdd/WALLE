@@ -43,23 +43,8 @@ export const isEmpty = function (data: unknown): boolean {
   return data === undefined || data === null || data === 0;
 };
 
-export const getDefaultValue = function (type: string): any {
-  switch (type) {
-    case 'string':
-      return '';
-    case 'object':
-      return {};
-    case 'array':
-      return [];
-    case 'integer':
-      return -Infinity;
-    default:
-      return undefined;
-  }
-};
-
 export const warning = function (content: string): void {
-  console.warn(`->ResponseDataInspector：${content}`);
+  console.warn(`-> ResponseDataInspector：${content}`);
 };
 
 export const responseDataInspector = function (data: any, jsonScheme: JSONSchema4, key: any[] = ['data']): boolean {
