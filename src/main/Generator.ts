@@ -340,12 +340,14 @@ export class Generator {
         const _requestFunctionFilePath = requestFunctionFilePath.replace(/\.js(x)?$/, '.ts$1');
         const _requestHookMakerFilePath = requestHookMakerFilePath.replace(/\.js(x)?$/, '.ts$1');
 
-        const topImportPkgTemplate = syntheticalConfig.topImportPkgTemplate || defaultTopImportPkgTemplate;
+        // import 语句
+        const _topImportPkgTemplate = syntheticalConfig.topImportPkgTemplate || defaultTopImportPkgTemplate;
 
         // 始终写入主文件
         const rawOutputContent = dedent`
           ${topNotesContent()}
-          ${topImportPkgTemplate(config)}
+          ${_topImportPkgTemplate(config)}
+
           ${content.join('\n\n').trim()}
         `;
 

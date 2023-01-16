@@ -11,6 +11,7 @@ import toJsonSchema from 'to-json-schema';
 import { compile, Options } from 'json-schema-to-typescript';
 import { JSONSchema4, JSONSchema4TypeName } from 'json-schema';
 import prettier from 'prettier';
+import dayjs from 'dayjs';
 
 import {
   Interface,
@@ -444,9 +445,8 @@ export function topNotesContent(): string {
   return `
   /**
    * Created By api-typescript
-   * @Author ${process.env.USERNAME}
-   */
-  `;
+   * @Date ${dayjs().format('YYYY-MM-DD HH:mm:ss')}
+   */`;
 }
 
 /**
