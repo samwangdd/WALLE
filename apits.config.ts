@@ -10,6 +10,11 @@ export default defineConfig({
       assignInterfaceProps: 'data',
       categories: [{ id: 7644, }],
     },
+    {
+      token: 'd93262cf7aa3bc578c090e52a3bb9b449075bf59c16a472875035e6dcf2bacb0',
+      gatewayPrefix: '/gateway/api/fj-mkt',
+      categories: [{ id: 7106 }],
+    },
   ],
   outputFilePath: 'src/api',
   // defaultRequestLib: false,
