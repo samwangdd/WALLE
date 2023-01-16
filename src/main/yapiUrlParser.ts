@@ -1,6 +1,7 @@
 import { castArray } from 'vtils';
-import type { Config } from '@/types';
-import { filterHandler } from '@/utils/common';
+
+import type { Config } from '../types';
+import { filterHandler } from '../utils/common';
 
 import { fetchInterfaceById, fetchProject } from './requestYapiData';
 

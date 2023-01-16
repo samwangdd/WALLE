@@ -22,8 +22,8 @@ import {
   ResponseBodyType,
   Config,
   SyntheticalConfig
-} from '@/types';
-import { FileData } from '@/helpers';
+} from '../types';
+import { FileData } from '../helpers';
 
 /**
  * 抛出错误。

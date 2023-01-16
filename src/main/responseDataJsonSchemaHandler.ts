@@ -1,6 +1,6 @@
 import * as changeCase from 'change-case';
 
-import { JSONSchema4, ExtendedInterface } from '@/types';
+import { JSONSchema4, ExtendedInterface } from '../types';
 
 export const jsonSchemeKey = function (path: string): string {
   const deeps = path.split('/');

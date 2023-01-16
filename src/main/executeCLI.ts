@@ -1,9 +1,9 @@
 import chalk from "chalk";
 
-import { Config } from "@/types";
-import { spinner } from "@/components/spinner";
-import * as log from '@/utils/console';
-import { packageCheck } from "@/utils/dependenciesHandler";
+import { Config } from "../types";
+import { spinner } from "../components/spinner";
+import * as log from '../utils/console';
+import { packageCheck } from "../utils/dependenciesHandler";
 
 import { Generator } from "./generator";
 import { yapiUrlParser } from "./yapiUrlParser";

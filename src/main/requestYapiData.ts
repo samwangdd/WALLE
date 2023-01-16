@@ -5,7 +5,7 @@ import got, { Options } from 'got';
 import prompts from 'prompts';
 import { isEmpty, omit } from 'vtils';
 
-import { CategoryList, Category, Project, SyntheticalConfig, Interface, BaseInterfaceInfo } from '@/types';
+import { CategoryList, Category, Project, SyntheticalConfig, Interface, BaseInterfaceInfo } from '../types';
 import {
   DefaultServerUrl,
   ResponseErrorCode,
@@ -16,11 +16,11 @@ import {
   yapiApiInterfaceDetail,
   yapiApiToken,
   yapiApiCatInterfaceList
-} from '@/constant/common';
-import { cookieJar, checkCookie } from '@/utils/cookie';
-import * as log from '@/utils/console';
-import { spinner } from '@/components/spinner';
-import { autoAsyncSplitQueue } from '@/helpers';
+} from '../constant/common';
+import { cookieJar, checkCookie } from '../utils/cookie';
+import * as log from '../utils/console';
+import { spinner } from '../components/spinner';
+import { autoAsyncSplitQueue } from '../helpers';
 
 type ResponseData<T = Record<string, any>> = {
   errcode: number;

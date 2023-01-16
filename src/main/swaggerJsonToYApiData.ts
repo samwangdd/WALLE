@@ -11,7 +11,7 @@ import swagger from 'swagger-client';
 import { each, find } from 'vtils';
 import { OpenAPIV2 as SwaggerType } from 'openapi-types';
 
-import { Category, Interface, Project } from '@/types';
+import { Category, Interface, Project } from '../types';
 
 let SwaggerData;
 let isOAS3;

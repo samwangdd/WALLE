@@ -6,8 +6,8 @@ import * as changeCase from 'change-case';
 import dayjs from 'dayjs';
 import fs from 'fs-extra';
 import path from 'path';
-import * as log from '../utils/console';
 import os from 'os';
+import { exec } from 'child_process';
 import {
   castArray,
   cloneDeepFast,
@@ -17,6 +17,7 @@ import {
   noop,
   pick
 } from 'vtils';
+
 import {
   CommentConfig,
   Config,
@@ -28,7 +29,7 @@ import {
   GeneratorOptions,
   RequestFunctionTemplateProps
 } from '../types';
-import { exec } from 'child_process';
+import * as log from '../utils/console';
 import {
   getRequestDataJsonSchema,
   getResponseDataJsonSchema,
@@ -37,12 +38,13 @@ import {
   topNotesContent,
   filterHandler
 } from '../utils/common';
+import { genOutputFilePath } from '../utils/getOutputPath';
+
 import { getProjectInfoAndInterfaces } from './requestYapiData';
 import { SwaggerToYApiServer } from './SwaggerToYApiServer';
 import genRequest from './genRequest';
 import genEntryFile from './genEntryFile';
 import { genJsonSchemeConstContent } from './responseDataJsonSchemaHandler';
-import { genOutputFilePath } from '../utils/getOutputPath';
 
 interface OutputFileList {
   [outputFilePath: string]: {

@@ -7,10 +7,10 @@ import fs from 'fs-extra';
 import path from 'path';
 import { dedent } from 'vtils';
 
-import { Config } from '@/types';
-import { genOutputFilePath } from '@/utils/getOutputPath';
-import { formatContent, topNotesContent } from '@/utils/common';
-import * as log from '@/utils/console';
+import { Config } from '../types';
+import { genOutputFilePath } from '../utils/getOutputPath';
+import { formatContent, topNotesContent } from '../utils/common';
+import * as log from '../utils/console';
 
 import { jsonSchemeFileHeader } from './responseDataJsonSchemaHandler';
 

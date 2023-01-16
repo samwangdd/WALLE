@@ -5,9 +5,9 @@
 import fs from 'fs-extra';
 import { dedent } from 'vtils';
 
-import { Config } from '@/types';
-import { genOutputFilePath } from '@/utils/getOutputPath';
-import { formatContent, topNotesContent } from '@/utils/common';
+import { Config } from '../types';
+import { genOutputFilePath } from '../utils/getOutputPath';
+import { formatContent, topNotesContent } from '../utils/common';
 
 export default async (config: Config) => {
   const { prettierConfigPath, defaultRequestLib = true } = config;
