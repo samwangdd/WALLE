@@ -1,10 +1,10 @@
 {
-  "name": "api-typescript",
-  "version": "0.1.0",
+  "name": "walle",
+  "version": "0.0.1",
   "main": "./lib/index.js",
   "module": "./es/index.js",
   "bin": {
-    "apits": "./bin/apits"
+    "walle": "./bin/walle"
   },
   "scripts": {
     "debug": "tsnd -r tsconfig-paths/register debug/index.ts --type-check false gen",

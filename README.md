@@ -4,16 +4,16 @@ Form a movie named WALL-E. He's cute and goodness, work hard and never complain.
 
 ## Install
 ```bash
-npm install -g @yapi/wallE-cli
+npm install -g @hs/walle
 ```
 
 ## Usage
 ```bash
 # init
-apits init
+walle init
 
 # generate
-apits gen
+walle gen
 ```
 
 ## Development
@@ -21,14 +21,14 @@ apits gen
 # install dependencies
 yarn && yarn link # link to global
 
-yarn link api-typescript # In other project you want to link apits
+yarn link walle # In other project you want to link walle
 ```
 [Development Doc](doc/development.md)
 
 add scripts in `package.json` script
 ```json
-  "api:init": "cross-env apits init",
-  "api:gen": "cross-env apits gen"
+  "api:init": "cross-env walle init",
+  "api:gen": "cross-env walle gen"
 ```
 
 ## Commit Type

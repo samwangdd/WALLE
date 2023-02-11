@@ -1,4 +1,4 @@
-import { defineConfig } from "./src/helpers";
+import { defineConfig } from "walle";
 
 export default defineConfig({
   serverType: "yapi",
@@ -16,7 +16,5 @@ export default defineConfig({
       categories: [{ id: 7106 }],
     },
   ],
-  outputFilePath: 'src/api',
-  // defaultRequestLib: false,
-  // topImportPkgTemplate: () => `import request from '@/service/api';`,
+  outputFilePath: "./api",
 });

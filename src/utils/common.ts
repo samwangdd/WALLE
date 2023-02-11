@@ -444,7 +444,7 @@ export function formatContent(content: string, prettierConfigPath?: string): str
 export function topNotesContent(): string {
   return `
   /**
-   * Created By api-typescript
+   * Created By WALLE, please don't modify this file.
    * @Date ${dayjs().format('YYYY-MM-DD HH:mm:ss')}
    */`;
 }

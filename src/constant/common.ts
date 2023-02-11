@@ -1,6 +1,6 @@
 export const DefaultServerUrl = 'http://yapi.corp.hongsong.club';
 
-export const CookieStoreFile = '/Users/Shared/api-typescript/apitsYapiCookie.json';
+export const CookieStoreFile = '/Users/Shared/walle/yapiCookie.json';
 
 export enum ResponseErrorCode {
   /** 未登录 */

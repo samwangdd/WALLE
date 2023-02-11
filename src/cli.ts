@@ -34,7 +34,7 @@ tsn.register({
     esModuleInterop: true,
     allowSyntheticDefaultImports: true,
     importHelpers: false,
-    allowJs: true, // 转换 js，支持在 apits.config.js 里使用最新语法
+    allowJs: true, // 转换 js，支持在 walle.config.js 里使用最新语法
     lib: ['es2017']
   }
 });
@@ -42,8 +42,8 @@ tsn.register({
 // 获取配置文件的路径信息
 export async function getConfigFilePath() {
   const cwd = process.cwd();
-  const configTSFile = path.join(cwd, 'apits.config.ts');
-  const configTSLocalFile = path.join(cwd, 'apits.config.local.ts');
+  const configTSFile = path.join(cwd, 'walle.config.ts');
+  const configTSLocalFile = path.join(cwd, 'walle.config.local.ts');
   const configTSLocalFileExist = await fs.pathExists(configTSLocalFile);
   const configTSFileExist = await fs.pathExists(configTSFile);
   const configFileExist = configTSLocalFileExist || configTSFileExist;
@@ -157,7 +157,7 @@ export default class CLI {
 
   init() {
     return yargs
-      .scriptName('apits')
+      .scriptName('walle')
       .usage('Usage: $0 <command> [options]')
       .command<any>(
         'init',

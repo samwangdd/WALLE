@@ -18,7 +18,7 @@
       "DOM"
     ],
     "paths": {
-      "api-typescript": [
+      "walle": [
         "./src/index.ts"
       ],
       "@/*": [

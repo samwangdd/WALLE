@@ -1,5 +1,5 @@
 export const YAPI_CONFIG_SNIPPET = (token: string) => `
-  import { defineConfig } from 'api-typescript';
+  import { defineConfig } from 'walle';
 
   export default defineConfig({
     serverType: 'yapi',

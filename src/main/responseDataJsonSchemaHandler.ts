@@ -84,7 +84,7 @@ export const runner = function (path: string, data: any, jsonSchema: Record<stri
 export const jsonSchemeFileHeader = function (): string {
   return `
   import * as changeCase from 'change-case';
-  import { JSONSchema4 } from 'api-typescript';
+  import { JSONSchema4 } from 'walle';
 
   /**
    * 获取scheme的key
