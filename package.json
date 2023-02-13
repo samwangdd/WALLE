@@ -1,5 +1,5 @@
 {
-  "name": "walle",
+  "name": "@hs/hs-fe-walle",
   "version": "0.0.1",
   "main": "./lib/index.js",
   "module": "./es/index.js",
