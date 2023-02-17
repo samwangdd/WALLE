@@ -1,5 +1,5 @@
 export const YAPI_CONFIG_SNIPPET = (token: string) => `
-  import { defineConfig } from 'walle';
+  import { defineConfig } from '@hs/hs-fe-walle';
 
   export default defineConfig({
     serverType: 'yapi',

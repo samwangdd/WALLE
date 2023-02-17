@@ -444,7 +444,8 @@ export function formatContent(content: string, prettierConfigPath?: string): str
 export function topNotesContent(): string {
   return `
   /**
-   * Created By WALLE, please don't modify this file.
+   * Created By WALLE, Please Don't Modify This File.
+   * 此文件由 WALLE 自动生成，请勿修改
    * @Date ${dayjs().format('YYYY-MM-DD HH:mm:ss')}
    */`;
 }
