@@ -1,7 +1,7 @@
-# WALL.E
+# WALL-E
 
 一个自动生成 TypeScript API 的工具，目前支持 YAPI 和 Swagger。
-名字源于一部动画电影的主人公——[机器人总动员 WALL.E](https://movie.douban.com/subject/2131459/)。
+名字源于一部动画电影的主人公——[机器人总动员 WALL-E](https://movie.douban.com/subject/2131459/)。
 
 ## 安装
 
@@ -13,7 +13,7 @@ yarn add -D @hs/hs-fe-walle
 在 `package.json` 中添加如下 scripts：
 
 ```json
-"api:init": "walle init",
+"api:init": "walle init"
 "api:gen": "walle gen"
 ```
 
