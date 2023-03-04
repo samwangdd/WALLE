@@ -3,3 +3,5 @@ es
 lib
 .docz
 .DS_Store
+
+src/api
