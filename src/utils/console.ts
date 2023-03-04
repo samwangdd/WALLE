@@ -72,3 +72,14 @@ export function table(tabularData: any, properties?: ReadonlyArray<string>): voi
 export function line(blank?: boolean) {
   consola.log(`\n${!blank ? '-----------------------' : ''}`);
 }
+
+export default {
+  log,
+  error,
+  info,
+  warn,
+  tips,
+  success,
+  table,
+  line,
+};
