@@ -7,7 +7,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { dedent } from 'vtils';
 
-import { Config } from '../types';
+import { Config } from '../types/global';
 import { genOutputFilePath } from '../utils/getOutputPath';
 import { formatContent, topNotesContent } from '../utils/common';
 import * as log from '../utils/console';

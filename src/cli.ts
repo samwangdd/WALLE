@@ -8,7 +8,7 @@ import yargs from 'yargs';
 import { dedent } from 'vtils';
 import yargsParser from 'yargs-parser';
 
-import { Config } from './types';
+import { Config } from './types/global';
 import { asyncFnArrayOrderRun, prepareYapiLogin } from './helpers';
 import { Generator } from './main/generator';
 import * as log from './utils/console';

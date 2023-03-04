@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-import { Config } from "../types";
+import { Config } from "../types/global";
 import { spinner } from "../components/spinner";
 import * as log from '../utils/console';
 import { packageCheck } from "../utils/dependenciesHandler";

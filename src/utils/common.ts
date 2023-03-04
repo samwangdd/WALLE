@@ -11,7 +11,6 @@ import toJsonSchema from 'to-json-schema';
 import { compile, Options } from 'json-schema-to-typescript';
 import { JSONSchema4, JSONSchema4TypeName } from 'json-schema';
 import prettier from 'prettier';
-import dayjs from 'dayjs';
 
 import {
   Interface,
@@ -23,7 +22,7 @@ import {
   ResponseBodyType,
   Config,
   SyntheticalConfig
-} from '../types';
+} from '../types/global';
 import { FileData } from '../helpers';
 
 /**
@@ -445,8 +444,7 @@ export function topNotesContent(): string {
   return `
   /**
    * Created By WALLE, Please Don't Modify This File.
-   * 此文件由 WALLE 自动生成，请勿修改
-   * @Date ${dayjs().format('YYYY-MM-DD HH:mm:ss')}
+   * 此文件由 WALL-E 自动生成，请勿修改
    */`;
 }
 

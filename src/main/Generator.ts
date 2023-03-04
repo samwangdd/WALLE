@@ -28,7 +28,7 @@ import {
   SyntheticalConfig,
   GeneratorOptions,
   RequestFunctionTemplateProps
-} from '../types';
+} from '../types/global';
 import * as log from '../utils/console';
 import {
   getRequestDataJsonSchema,
@@ -131,7 +131,7 @@ function adminRequestFunctionTemplate(props: RequestFunctionTemplateProps, confi
   const url = config?.proxyInterface?.path || '/admin-interface/proxy/v0/proxy';
 
   return `export const ${requestFunctionName} = (data${hasData ? '' : '?'}: ${requestDataTypeName}) => {
-    return request.post<${requestDataTypeName},${responseDataTypeName}>( '${url}', {
+    return request.post<${requestDataTypeName},IHttpBusinessResponse<${responseDataTypeName}>>( '${url}', {
       data:{
         real_url: '${extendedInterfaceInfo.path}',
         params: JSON.stringify(data)

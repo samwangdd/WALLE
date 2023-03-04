@@ -3,7 +3,7 @@
  */
 
 import path from 'path';
-import { Config } from '../types';
+import { Config } from '../types/global';
 
 export const genOutputFilePath = (config: Config, file: string) => {
   const { dir, name } = path.parse(config.outputFilePath || '');
