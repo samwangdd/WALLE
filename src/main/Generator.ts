@@ -66,9 +66,9 @@ function defaultTopImportPkgTemplate(config?: Config) {
   return !defaultRequestLib ? `import request from '../request'` : '';
 }
 
-const getDataKeySetStr = (method: string) => {
+const getDataKey = (method: string) => {
   if (['head', 'option', 'get'].includes(method.toLowerCase())) {
-    return 'params: data';
+    return 'query: data';
   }
   return 'data';
 };
@@ -113,14 +113,16 @@ function defaultRequestFunctionTemplate(props: RequestFunctionTemplateProps, con
   const url = gatewayPrefix ? `${gatewayPrefix}${extendedInterfaceInfo.path}` : extendedInterfaceInfo.path;
   const inputData = `data${hasData ? '' : '?'}`;
   const inputDataType = `${requestDataTypeName}${requestFunctionExtraParams ? `,extra?:Record<string,any>` : ''}`;
+  const path = handlePathParam(url);
+  const requestDataType = getDataKey(method);
+  const _baseUrl = baseURL ? `baseURL: ${finalBaseUrl},` : '';
+  const extraParams = requestFunctionExtraParams ? `...extra,` : '';
 
   return `export const ${requestFunctionName} = (${inputData}: ${inputDataType}) => {
-    return request.${method}<${requestDataTypeName},IHttpBusinessResponse<${responseDataTypeName}>>(${handlePathParam(
-    url
-  )}, {
-      ${getDataKeySetStr(method)},
-      ${baseURL ? `baseURL: ${finalBaseUrl},` : ''}
-      ${requestFunctionExtraParams ? `...extra` : ''}
+    return request.${method}<${requestDataTypeName},IHttpBusinessResponse<${responseDataTypeName}>>(${path}, {
+      ${requestDataType},
+      ${_baseUrl}
+      ${extraParams}
     })
   }`;
 }
