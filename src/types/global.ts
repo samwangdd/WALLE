@@ -522,7 +522,7 @@ export interface SharedConfig {
   comment?: CommentConfig;
 
   /**
-   * URL 的网关前缀，`接口地址` 会自动添加该前缀。
+   * URL 的网关前缀，`接口地址` 会自动拼接该前缀。
    * @type {string}
    * @example '/gateway/api/user'
    */

@@ -7,7 +7,8 @@ import { dedent } from 'vtils';
 
 import { Config } from '../types/global';
 import { genOutputFilePath } from '../utils/getOutputPath';
-import { formatContent, topNotesContent } from '../utils/common';
+import { formatContent } from '../utils/common';
+import { TOP_NOTE_CONTENT } from '../constant/snippet';
 
 export default async (config: Config) => {
   const { prettierConfigPath, defaultRequestLib = true } = config;
@@ -23,7 +24,7 @@ export default async (config: Config) => {
   const inspector = config.jsonSchema?.enabled;
 
   const content = `
-  ${topNotesContent()}
+  ${TOP_NOTE_CONTENT()}
   import request from '@medlinker/med-request';
   ${inspector ? "import * as jsonScheme from './responseDataJsonSchema'" : ''}
 

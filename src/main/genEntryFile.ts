@@ -9,8 +9,9 @@ import { dedent } from 'vtils';
 
 import { Config } from '../types/global';
 import { genOutputFilePath } from '../utils/getOutputPath';
-import { formatContent, topNotesContent } from '../utils/common';
+import { formatContent } from '../utils/common';
 import * as log from '../utils/console';
+import { TOP_NOTE_CONTENT } from '../constant/snippet';
 
 import { jsonSchemeFileHeader } from './responseDataJsonSchemaHandler';
 
@@ -18,7 +19,7 @@ import { jsonSchemeFileHeader } from './responseDataJsonSchemaHandler';
 export async function prepareIndexFile(config: Config) {
   const indexFilePath = genOutputFilePath(config, 'index.ts');
   if (!(await fs.pathExists(indexFilePath))) {
-    fs.outputFileSync(indexFilePath, dedent`${topNotesContent()}` + '\n');
+    fs.outputFileSync(indexFilePath, dedent`${TOP_NOTE_CONTENT()}` + '\n');
   }
 }
 
@@ -57,7 +58,7 @@ export default async (config: Config, categoryList: { categoryId: string; projec
       return `export * from  "./${projectId}/${categoryId}responseDataJsonSchema"`;
     });
     const schemaContent = `
-    ${topNotesContent()}
+    ${TOP_NOTE_CONTENT()}
     ${exportAllSchema.join(';')}
     ${jsonSchemeFileHeader()}
   `;
@@ -116,7 +117,7 @@ export const genGitRepoIndex = async (config: Config, filePathList: string[]) =>
 
   // const content = `
   //   // <-Logs->
-  //   ${notes || topNotesContent()}
+  //   ${notes || TOP_NOTE_CONTENT()}
   //   // <-END->
   //   ${originFileContent}
   //   ${exportAllInterface.join(';')}

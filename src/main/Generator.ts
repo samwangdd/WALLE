@@ -35,10 +35,11 @@ import {
   getResponseDataJsonSchema,
   jsonSchemaToType,
   formatContent,
-  topNotesContent,
   filterHandler
 } from '../utils/common';
 import { genOutputFilePath } from '../utils/getOutputPath';
+import { BUSINESS_TYPE_IMPORT, TOP_NOTE_CONTENT } from '../constant/snippet';
+
 
 import { getProjectInfoAndInterfaces } from './requestYapiData';
 import { SwaggerToYApiServer } from './SwaggerToYApiServer';
@@ -87,27 +88,36 @@ function handlePathParam(path: string) {
   return JSON.stringify(path);
 }
 
-// 默认请求函数体生成模板
+/**
+ * 生成请求函数模板
+ *
+ * @param {RequestFunctionTemplateProps} props
+ * @param {SyntheticalConfig} [config]
+ * @return {*}  {string}
+ */
 function defaultRequestFunctionTemplate(props: RequestFunctionTemplateProps, config?: SyntheticalConfig): string {
   const { baseURL, requestFunctionName, requestDataTypeName, responseDataTypeName, extendedInterfaceInfo } = props;
   const { requestFunctionExtraParams, gatewayPrefix } = config || {};
   const { req_params, req_query } = extendedInterfaceInfo;
   const hasData = req_params.length || req_query.length;
   const method = extendedInterfaceInfo.method.toLowerCase();
+
   let finalBaseUrl = '';
   if (baseURL?.match(/^\[code\]:/)) {
-    // 如果使用[code]开头则表示，作为代码段执行；否则仅作为字符串
+    // 如果使用[code]开头，则表示作为代码段执行，否则仅作为字符串
     finalBaseUrl = baseURL.replace(/^\[code\]:/, '');
   } else {
     finalBaseUrl = `"${baseURL}"`;
   }
 
   const url = gatewayPrefix ? `${gatewayPrefix}${extendedInterfaceInfo.path}` : extendedInterfaceInfo.path;
-  return `export const ${requestFunctionName} = (data${hasData ? '' : '?'}: ${requestDataTypeName}${requestFunctionExtraParams ? `,extra?:Record<string,any>` : ''
-    }) => {
-    return request.${method}<${requestDataTypeName},${responseDataTypeName}>(${handlePathParam(
-      url
-    )}, {
+  const inputData = `data${hasData ? '' : '?'}`;
+  const inputDataType = `${requestDataTypeName}${requestFunctionExtraParams ? `,extra?:Record<string,any>` : ''}`;
+
+  return `export const ${requestFunctionName} = (${inputData}: ${inputDataType}) => {
+    return request.${method}<${requestDataTypeName},IHttpBusinessResponse<${responseDataTypeName}>>(${handlePathParam(
+    url
+  )}, {
       ${getDataKeySetStr(method)},
       ${baseURL ? `baseURL: ${finalBaseUrl},` : ''}
       ${requestFunctionExtraParams ? `...extra` : ''}
@@ -345,7 +355,8 @@ export class Generator {
 
         // 始终写入主文件
         const rawOutputContent = dedent`
-          ${topNotesContent()}
+          ${TOP_NOTE_CONTENT()}
+          ${BUSINESS_TYPE_IMPORT()}
           ${_topImportPkgTemplate(config)}
 
           ${content.join('\n\n').trim()}

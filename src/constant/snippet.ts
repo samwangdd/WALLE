@@ -12,3 +12,15 @@ export const YAPI_CONFIG_SNIPPET = (token: string) => `
     defaultRequestLib: false,
     topImportPkgTemplate: () => "import request from '@/service/api';",
   })`
+
+
+export const TOP_NOTE_CONTENT = (): string =>
+  `
+  /**
+   * Created By WALLE, Please Don't Modify This File.
+   * 此文件由 WALL-E 自动生成，请勿修改
+   */`;
+
+
+export const BUSINESS_TYPE_IMPORT = () => `import type { IHttpBusinessResponse } from '@hs/hs-fe-walle';
+  `

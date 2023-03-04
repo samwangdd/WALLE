@@ -437,18 +437,6 @@ export function formatContent(content: string, prettierConfigPath?: string): str
 }
 
 /**
- * 通用生成文件顶部注释
- * @returns
- */
-export function topNotesContent(): string {
-  return `
-  /**
-   * Created By WALLE, Please Don't Modify This File.
-   * 此文件由 WALL-E 自动生成，请勿修改
-   */`;
-}
-
-/**
  * filter处理函数
  * @param interfaceFilter
  * @returns
