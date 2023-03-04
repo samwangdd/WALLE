@@ -11,7 +11,6 @@ import toJsonSchema from 'to-json-schema';
 import { compile, Options } from 'json-schema-to-typescript';
 import { JSONSchema4, JSONSchema4TypeName } from 'json-schema';
 import prettier from 'prettier';
-import dayjs from 'dayjs';
 
 import {
   Interface,
@@ -23,7 +22,7 @@ import {
   ResponseBodyType,
   Config,
   SyntheticalConfig
-} from '../types';
+} from '../types/global';
 import { FileData } from '../helpers';
 
 /**
@@ -435,18 +434,6 @@ export function formatContent(content: string, prettierConfigPath?: string): str
   const prettyOutputContent = prettier.format(content, config);
 
   return prettyOutputContent;
-}
-
-/**
- * 通用生成文件顶部注释
- * @returns
- */
-export function topNotesContent(): string {
-  return `
-  /**
-   * Created By WALLE, please don't modify this file.
-   * @Date ${dayjs().format('YYYY-MM-DD HH:mm:ss')}
-   */`;
 }
 
 /**

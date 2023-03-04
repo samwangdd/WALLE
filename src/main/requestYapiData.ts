@@ -5,7 +5,7 @@ import got, { Options } from 'got';
 import prompts from 'prompts';
 import { isEmpty, omit } from 'vtils';
 
-import { CategoryList, Category, Project, SyntheticalConfig, Interface, BaseInterfaceInfo } from '../types';
+import { CategoryList, Category, Project, SyntheticalConfig, Interface, BaseInterfaceInfo } from '../types/global';
 import {
   DefaultServerUrl,
   ResponseErrorCode,

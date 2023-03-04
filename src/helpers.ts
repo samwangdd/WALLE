@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-eval */
 import type { AppendOptions } from 'form-data';
-import type { Config, RequestConfig, RequestFunctionParams } from './types';
+import type { Config, RequestConfig, RequestFunctionParams } from './types/global';
 import { checkCookie } from './utils/cookie';
 import { spinner } from './components/spinner';
 import { loginYapi, loginPrompts } from './main/requestYapiData';

@@ -1,6 +1,6 @@
 {
   "name": "@hs/hs-fe-walle",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.3",
   "main": "./lib/index.js",
   "module": "./es/index.js",
   "bin": {
@@ -9,9 +9,7 @@
   "scripts": {
     "debug": "tsnd -r tsconfig-paths/register debug/index.ts --type-check false gen",
     "debug:init": "tsnd -r tsconfig-paths/register debug/index.ts --type-check false init",
-    "build": "father build",
-    "prepublish": "npm run build && standard-version && git push --follow-tags origin master && npm publish  --registry=https://registry.npmjs.org",
-    "publishOnly": "npm run build"
+    "build": "father build"
   },
   "files": [
     "bin",
@@ -19,11 +17,9 @@
     "es"
   ],
   "dependencies": {
-    "@babel/runtime": "^7.13.10",
     "change-case": "^3.0.2",
     "consola": "^2.3.0",
     "dayjs": "^1.8.32",
-    "download-git-repo": "^3.0.2",
     "execa": "^5.1.1",
     "form-data": "^3.0.0",
     "fs-extra": "^7.0.1",
@@ -39,7 +35,6 @@
     "prompts": "^2.0.4",
     "rimraf": "^3.0.2",
     "signal-exit": "^3.0.3",
-    "simple-git": "^2.41.1",
     "swagger-client": "^3.12.0",
     "to-json-schema": "^0.2.5",
     "tough-cookie": "^4.0.0",
@@ -51,6 +46,7 @@
     "yargs-parser": "^20.2.7"
   },
   "devDependencies": {
+    "@babel/runtime": "^7.13.10",
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-angular": "^17.3.0",
     "@commitlint/config-conventional": "^11.0.0",
@@ -107,10 +103,6 @@
     "src/*.{js,json,vue}": [
       "eslint --fix"
     ]
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org"
   },
   "repository": "https://github.com/samwangdd/WALLE.git",
   "author": "samwangdd <wyysammore@gmail.com>",

@@ -28,17 +28,18 @@ import {
   SyntheticalConfig,
   GeneratorOptions,
   RequestFunctionTemplateProps
-} from '../types';
+} from '../types/global';
 import * as log from '../utils/console';
 import {
   getRequestDataJsonSchema,
   getResponseDataJsonSchema,
   jsonSchemaToType,
   formatContent,
-  topNotesContent,
   filterHandler
 } from '../utils/common';
 import { genOutputFilePath } from '../utils/getOutputPath';
+import { BUSINESS_TYPE_IMPORT, TOP_NOTE_CONTENT } from '../constant/snippet';
+
 
 import { getProjectInfoAndInterfaces } from './requestYapiData';
 import { SwaggerToYApiServer } from './SwaggerToYApiServer';
@@ -65,9 +66,9 @@ function defaultTopImportPkgTemplate(config?: Config) {
   return !defaultRequestLib ? `import request from '../request'` : '';
 }
 
-const getDataKeySetStr = (method: string) => {
+const getDataKey = (method: string) => {
   if (['head', 'option', 'get'].includes(method.toLowerCase())) {
-    return 'params: data';
+    return 'query: data';
   }
   return 'data';
 };
@@ -87,30 +88,41 @@ function handlePathParam(path: string) {
   return JSON.stringify(path);
 }
 
-// 默认请求函数体生成模板
+/**
+ * 生成请求函数模板
+ *
+ * @param {RequestFunctionTemplateProps} props
+ * @param {SyntheticalConfig} [config]
+ * @return {*}  {string}
+ */
 function defaultRequestFunctionTemplate(props: RequestFunctionTemplateProps, config?: SyntheticalConfig): string {
   const { baseURL, requestFunctionName, requestDataTypeName, responseDataTypeName, extendedInterfaceInfo } = props;
   const { requestFunctionExtraParams, gatewayPrefix } = config || {};
   const { req_params, req_query } = extendedInterfaceInfo;
   const hasData = req_params.length || req_query.length;
   const method = extendedInterfaceInfo.method.toLowerCase();
+
   let finalBaseUrl = '';
   if (baseURL?.match(/^\[code\]:/)) {
-    // 如果使用[code]开头则表示，作为代码段执行；否则仅作为字符串
+    // 如果使用[code]开头，则表示作为代码段执行，否则仅作为字符串
     finalBaseUrl = baseURL.replace(/^\[code\]:/, '');
   } else {
     finalBaseUrl = `"${baseURL}"`;
   }
 
   const url = gatewayPrefix ? `${gatewayPrefix}${extendedInterfaceInfo.path}` : extendedInterfaceInfo.path;
-  return `export const ${requestFunctionName} = (data${hasData ? '' : '?'}: ${requestDataTypeName}${requestFunctionExtraParams ? `,extra?:Record<string,any>` : ''
-    }) => {
-    return request.${method}<${requestDataTypeName},${responseDataTypeName}>(${handlePathParam(
-      url
-    )}, {
-      ${getDataKeySetStr(method)},
-      ${baseURL ? `baseURL: ${finalBaseUrl},` : ''}
-      ${requestFunctionExtraParams ? `...extra` : ''}
+  const inputData = `data${hasData ? '' : '?'}`;
+  const inputDataType = `${requestDataTypeName}${requestFunctionExtraParams ? `,extra?:Record<string,any>` : ''}`;
+  const path = handlePathParam(url);
+  const requestDataType = getDataKey(method);
+  const _baseUrl = baseURL ? `baseURL: ${finalBaseUrl},` : '';
+  const extraParams = requestFunctionExtraParams ? `...extra,` : '';
+
+  return `export const ${requestFunctionName} = (${inputData}: ${inputDataType}) => {
+    return request.${method}<${requestDataTypeName},IHttpBusinessResponse<${responseDataTypeName}>>(${path}, {
+      ${requestDataType},
+      ${_baseUrl}
+      ${extraParams}
     })
   }`;
 }
@@ -131,7 +143,7 @@ function adminRequestFunctionTemplate(props: RequestFunctionTemplateProps, confi
   const url = config?.proxyInterface?.path || '/admin-interface/proxy/v0/proxy';
 
   return `export const ${requestFunctionName} = (data${hasData ? '' : '?'}: ${requestDataTypeName}) => {
-    return request.post<${requestDataTypeName},${responseDataTypeName}>( '${url}', {
+    return request.post<${requestDataTypeName},IHttpBusinessResponse<${responseDataTypeName}>>( '${url}', {
       data:{
         real_url: '${extendedInterfaceInfo.path}',
         params: JSON.stringify(data)
@@ -345,7 +357,8 @@ export class Generator {
 
         // 始终写入主文件
         const rawOutputContent = dedent`
-          ${topNotesContent()}
+          ${TOP_NOTE_CONTENT()}
+          ${BUSINESS_TYPE_IMPORT()}
           ${_topImportPkgTemplate(config)}
 
           ${content.join('\n\n').trim()}
