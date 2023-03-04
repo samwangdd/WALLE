@@ -1,4 +1,4 @@
-import { defineConfig } from "@hs/hs-fe-walle";
+import { defineConfig } from "walle";
 
 export default defineConfig({
   serverType: 'yapi',
@@ -34,7 +34,7 @@ export default defineConfig({
       categories: [{ id: 7738 }],
     },
   ],
-  outputFilePath: 'src/api',
+  outputFilePath: './debug/api',
   defaultRequestLib: false,
   topImportPkgTemplate: () => "import request from '@/service/api';",
 });
